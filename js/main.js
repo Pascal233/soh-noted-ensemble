@@ -6,7 +6,7 @@
 
 // ── Navbar scroll + mobile toggle ──────────────────────────────
 const navbar    = document.querySelector('.navbar');
-const navToggle = document.querySelector('.nav-toggle');
+const navToggle = document.querySelector('.nav-tog');
 const navMenu   = document.querySelector('.nav-menu');
 
 window.addEventListener('scroll', () => {
@@ -20,7 +20,6 @@ navToggle?.addEventListener('click', () => {
   navMenu.classList.toggle('open', isOpen);
   navToggle.setAttribute('aria-expanded', isOpen);
 });
-
 document.querySelectorAll('.nav-menu a').forEach(a => {
   a.addEventListener('click', () => {
     navToggle.classList.remove('open');
@@ -46,7 +45,7 @@ const io = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); io.unobserve(e.target); } });
 }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+document.querySelectorAll('.fu').forEach(el => io.observe(el));
 
 // ── Scroll to top ───────────────────────────────────────────────
 const scrollTopBtn = document.getElementById('scrollTop');
@@ -91,18 +90,15 @@ const CONCERTS = {
 let activeConcert = null;
 
 // ── Open ticket modal ───────────────────────────────────────────
-function openTicketModal(id) {
+function openModal(id) {
   activeConcert = CONCERTS[id];
   if (!activeConcert) return;
-
   document.getElementById('modalConcertName').textContent = activeConcert.name;
   document.getElementById('modalConcertDate').textContent = activeConcert.date;
   document.getElementById('modalVenueName').textContent   = activeConcert.venue;
-
   document.getElementById('ticketForm').reset();
   document.getElementById('ussdInfo').classList.remove('show');
-  document.querySelectorAll('.pay-opt').forEach(o => { o.style.borderColor = ''; o.style.background = ''; });
-
+  document.querySelectorAll('.popt').forEach(o => { o.style.borderColor=''; o.style.background=''; });
   document.getElementById('ticketModal').classList.add('active');
   document.body.style.overflow = 'hidden';
   updateSummary();
@@ -116,7 +112,6 @@ function closeTicketModal() {
 document.getElementById('modalCloseBtn')?.addEventListener('click', closeTicketModal);
 document.getElementById('modalCancelBtn')?.addEventListener('click', closeTicketModal);
 document.getElementById('ticketModal')?.addEventListener('click', e => { if (e.target.id === 'ticketModal') closeTicketModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeTicketModal(); closeMomoModal(); } });
 
 // ── Summary calculation ─────────────────────────────────────────
 function updateSummary() {
@@ -146,15 +141,13 @@ document.getElementById('qtyPlus')?.addEventListener('click', () => {
 });
 
 // ── Payment method selection ────────────────────────────────────
-document.querySelectorAll('.pay-opt').forEach(opt => {
+document.querySelectorAll('.popt').forEach(opt => {
   opt.addEventListener('click', () => {
-    document.querySelectorAll('.pay-opt').forEach(o => { o.style.borderColor = ''; o.style.background = ''; });
+    document.querySelectorAll('.popt').forEach(o => { o.style.borderColor=''; o.style.background=''; });
     opt.style.borderColor = 'var(--navy)';
     opt.style.background  = 'rgba(26,42,94,.06)';
-
-    const radio  = opt.querySelector('input[type="radio"]');
+    const radio = opt.querySelector('input[type="radio"]');
     if (radio) radio.checked = true;
-
     const ussdBox = document.getElementById('ussdInfo');
     ussdBox?.classList.toggle('show', radio?.value === 'ussd');
   });
@@ -168,7 +161,7 @@ document.getElementById('ticketForm')?.addEventListener('submit', e => {
   const phone  = document.getElementById('buyerPhone')?.value.trim();
   const type   = document.getElementById('ticketType')?.value;
   const qty    = parseInt(document.getElementById('ticketQty')?.value) || 1;
-  const method = document.querySelector('.pay-opt input:checked')?.value;
+  const method = document.querySelector('.popt input:checked')?.value;
 
   if (!name || !email || !phone || !type) { showToast('Please fill in all required fields.', 'error'); return; }
   if (!method) { showToast('Please select a payment method.', 'error'); return; }
@@ -268,3 +261,5 @@ function showToast(msg, type = '') {
 document.addEventListener('DOMContentLoaded', () => {
   updateActiveLink();
 });
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeTicketModal(); closeMomoModal(); } });
