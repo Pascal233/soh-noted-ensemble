@@ -620,3 +620,41 @@ button{font-family:var(--fb);cursor:pointer}
   .member-card-wrap{position:static!important}
   .id-card{box-shadow:none!important;max-width:340px;margin:0 auto}
 }
+
+/* ══════════════════════════════════════════
+   LIGHTBOX
+══════════════════════════════════════════ */
+.lightbox{
+  position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.92);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s var(--ease);
+  cursor:zoom-out;
+}
+.lightbox.open{opacity:1;pointer-events:all}
+
+.lightbox img{
+  max-width:92vw;max-height:92vh;
+  object-fit:contain;border-radius:var(--r);
+  box-shadow:0 32px 80px rgba(0,0,0,.6);
+  transform:scale(.93);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  cursor:default;
+}
+.lightbox.open img{transform:scale(1)}
+
+.lightbox-close{
+  position:absolute;top:20px;right:20px;
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:1.3rem;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background var(--ease);
+  font-family:var(--fb);
+}
+.lightbox-close:hover{background:rgba(255,255,255,.25)}
+
+/* Cursor hint on clickable images */
+.lb-trigger{cursor:zoom-in}

@@ -402,3 +402,47 @@ document.getElementById('btnResetCard')?.addEventListener('click', () => {
   document.getElementById('mcNote').style.display    = 'none';
   document.querySelector('.mc-hint').style.display   = 'block';
 });
+
+// ══════════════════════════════════════════════
+// LIGHTBOX
+// ══════════════════════════════════════════════
+const lightbox = document.getElementById('lightbox');
+const lbImg    = document.getElementById('lbImg');
+const lbClose  = document.getElementById('lbClose');
+
+function openLightbox(src, alt) {
+  lbImg.src = src;
+  lbImg.alt = alt || '';
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+  // Clear src after transition so no flash on next open
+  setTimeout(() => { lbImg.src = ''; }, 300);
+}
+
+// Click on any image with class lb-trigger
+document.addEventListener('click', e => {
+  const img = e.target.closest('.lb-trigger');
+  if (img) {
+    e.preventDefault();
+    e.stopPropagation();
+    openLightbox(img.src, img.alt);
+  }
+});
+
+// Close on backdrop click
+lightbox?.addEventListener('click', e => {
+  if (e.target === lightbox) closeLightbox();
+});
+
+// Close button
+lbClose?.addEventListener('click', closeLightbox);
+
+// Close on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && lightbox?.classList.contains('open')) closeLightbox();
+});
