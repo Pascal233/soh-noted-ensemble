@@ -404,6 +404,7 @@ document.getElementById('btnResetCard')?.addEventListener('click', () => {
 });
 
 // ══════════════════════════════════════════════
+// ══════════════════════════════════════════════
 // LIGHTBOX
 // ══════════════════════════════════════════════
 const lightbox = document.getElementById('lightbox');
@@ -411,6 +412,7 @@ const lbImg    = document.getElementById('lbImg');
 const lbClose  = document.getElementById('lbClose');
 
 function openLightbox(src, alt) {
+  if (!src) return;
   lbImg.src = src;
   lbImg.alt = alt || '';
   lightbox.classList.add('open');
@@ -420,23 +422,46 @@ function openLightbox(src, alt) {
 function closeLightbox() {
   lightbox.classList.remove('open');
   document.body.style.overflow = '';
-  // Clear src after transition so no flash on next open
   setTimeout(() => { lbImg.src = ''; }, 300);
 }
 
-// Click on any image with class lb-trigger
-document.addEventListener('click', e => {
-  const img = e.target.closest('.lb-trigger');
-  if (img) {
-    e.preventDefault();
-    e.stopPropagation();
-    openLightbox(img.src, img.alt);
+// Wire up after DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Gallery tiles — click the whole .g-item
+  document.querySelectorAll('.g-item').forEach(item => {
+    item.style.cursor = 'zoom-in';
+    item.addEventListener('click', () => {
+      const img = item.querySelector('img.lb-trigger');
+      if (img) openLightbox(img.src, img.alt);
+    });
+  });
+
+  // ED avatar — click the container
+  const edAv = document.querySelector('.ed-avatar');
+  if (edAv) {
+    edAv.style.cursor = 'zoom-in';
+    edAv.addEventListener('click', () => {
+      const img = edAv.querySelector('img.lb-trigger');
+      if (img) openLightbox(img.src, img.alt);
+    });
   }
+
+  // About image — click the container
+  const aboutBox = document.querySelector('.about-img-box');
+  if (aboutBox) {
+    aboutBox.style.cursor = 'zoom-in';
+    aboutBox.addEventListener('click', () => {
+      const img = aboutBox.querySelector('img.lb-trigger');
+      if (img) openLightbox(img.src, img.alt);
+    });
+  }
+
 });
 
 // Close on backdrop click
 lightbox?.addEventListener('click', e => {
-  if (e.target === lightbox) closeLightbox();
+  if (e.target === lightbox || e.target === lbImg) closeLightbox();
 });
 
 // Close button

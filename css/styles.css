@@ -657,4 +657,7 @@ button{font-family:var(--fb);cursor:pointer}
 .lightbox-close:hover{background:rgba(255,255,255,.25)}
 
 /* Cursor hint on clickable images */
-.lb-trigger{cursor:zoom-in}
+.lb-trigger { cursor: zoom-in }
+.g-item     { cursor: zoom-in }
+.ed-avatar  { cursor: zoom-in }
+.about-img-box { cursor: zoom-in }
