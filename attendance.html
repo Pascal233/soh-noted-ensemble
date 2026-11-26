@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="Soh NOTED Ensemble — Members Attendance Portal"/>
+<title>Members Portal | Soh NOTED Ensemble</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/attendance.css"/>
+</head>
+<body>
+
+<!-- ══ TOP BAR ══ -->
+<header class="ap-header">
+  <a href="index.html" class="ap-brand">
+    <img src="images/logo.png" alt="Soh NOTED Ensemble" onerror="this.style.display='none'"/>
+    <div>
+      <span class="ap-brand-name">Soh NOTED Ensemble</span>
+      <span class="ap-brand-tag">Members Portal</span>
+    </div>
+  </a>
+  <div class="ap-header-right" id="headerRight">
+    <!-- Filled by JS once logged in -->
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════
+     SCREEN 1 — LOGIN
+══════════════════════════════════════ -->
+<div class="screen active" id="screenLogin">
+  <div class="login-wrap">
+    <div class="login-logo">
+      <img src="images/logo.png" alt="Soh NOTED Ensemble" onerror="this.style.display='none'"/>
+    </div>
+    <h1 class="login-title">Members Portal</h1>
+    <p class="login-sub">Sign in with your Member ID and PIN</p>
+
+    <form class="ap-form" id="loginForm" novalidate>
+      <div class="ap-fg">
+        <label for="loginId">Member ID</label>
+        <input type="text" id="loginId" placeholder="e.g. SNE-2024-4821" autocomplete="off" required/>
+      </div>
+      <div class="ap-fg">
+        <label for="loginPin">PIN</label>
+        <div class="pin-wrap">
+          <input type="password" id="loginPin" placeholder="Enter your PIN" maxlength="6" autocomplete="off" required/>
+          <button type="button" class="pin-toggle" id="pinToggle" aria-label="Show PIN">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="ap-error" id="loginError"></div>
+      <button type="submit" class="ap-btn ap-btn-primary" id="loginBtn">Sign In</button>
+      <p class="login-help">Forgot your PIN? Contact the secretary or Executive Director to reset it.</p>
+    </form>
+
+    <!-- First-time PIN setup -->
+    <div id="firstLoginSetup" style="display:none">
+      <div class="divider-line"><span>First time? Set your PIN</span></div>
+      <form class="ap-form" id="setupForm" novalidate>
+        <div class="ap-fg">
+          <label for="setupId">Member ID</label>
+          <input type="text" id="setupId" placeholder="Your Member ID" autocomplete="off" required/>
+        </div>
+        <div class="ap-fg">
+          <label for="setupPin">Create PIN (4–6 digits)</label>
+          <input type="password" id="setupPin" placeholder="Choose a PIN" maxlength="6" required/>
+        </div>
+        <div class="ap-fg">
+          <label for="setupPin2">Confirm PIN</label>
+          <input type="password" id="setupPin2" placeholder="Repeat your PIN" maxlength="6" required/>
+        </div>
+        <div class="ap-error" id="setupError"></div>
+        <button type="submit" class="ap-btn ap-btn-primary">Set PIN &amp; Sign In</button>
+      </form>
+    </div>
+
+    <button class="text-btn" id="toggleFirstLogin">First time logging in? Set your PIN</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 2 — MEMBER DASHBOARD
+══════════════════════════════════════ -->
+<div class="screen" id="screenMember">
+  <div class="ap-container">
+
+    <!-- Welcome banner -->
+    <div class="welcome-banner">
+      <div>
+        <p class="welcome-label">Welcome back</p>
+        <h2 class="welcome-name" id="memberName">—</h2>
+        <p class="welcome-meta"><span id="memberRole">—</span> &nbsp;·&nbsp; <span id="memberVoice">—</span> &nbsp;·&nbsp; ID: <span id="memberIdDisplay">—</span></p>
+      </div>
+      <div class="attendance-pill" id="attendancePill">
+        <span id="attendancePercent">—</span>
+        <span>Attendance</span>
+      </div>
+    </div>
+
+    <!-- Today's session / Check-in -->
+    <div class="session-card" id="todaySessionCard">
+      <div class="session-card-header">
+        <h3>Today's Session</h3>
+        <span class="session-type-badge" id="sessionTypeBadge">—</span>
+      </div>
+      <div id="noSessionMsg" class="no-session">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+        <p>No session scheduled for today.</p>
+        <span>Check back on the next rehearsal day.</span>
+      </div>
+      <div id="sessionDetails" style="display:none">
+        <p class="session-title" id="sessionTitle">—</p>
+        <div class="session-meta-row">
+          <span id="sessionDate">—</span>
+          <span id="sessionTime">—</span>
+          <span id="sessionVenue">—</span>
+        </div>
+        <div id="checkinArea">
+          <div id="alreadyCheckedIn" class="checkin-success" style="display:none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div>
+              <p>You are marked <strong>Present</strong></p>
+              <span id="checkinTime">—</span>
+            </div>
+          </div>
+          <div id="checkinForm" style="display:none">
+            <p class="code-instruction">Enter the session code announced by the director:</p>
+            <div class="code-inputs" id="codeInputs">
+              <input type="text" maxlength="1" class="code-box" inputmode="numeric"/>
+              <input type="text" maxlength="1" class="code-box" inputmode="numeric"/>
+              <input type="text" maxlength="1" class="code-box" inputmode="numeric"/>
+              <input type="text" maxlength="1" class="code-box" inputmode="numeric"/>
+              <input type="text" maxlength="1" class="code-box" inputmode="numeric"/>
+              <input type="text" maxlength="1" class="code-box" inputmode="numeric"/>
+            </div>
+            <div class="ap-error" id="codeError"></div>
+            <button class="ap-btn ap-btn-primary" id="submitCodeBtn">Mark Me Present</button>
+          </div>
+          <div id="windowClosed" class="window-closed" style="display:none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+            <p>Check-in window has closed for this session.</p>
+          </div>
+          <div id="notYetOpen" class="not-yet" style="display:none">
+            <p>Check-in opens <strong id="opensAt">—</strong> before the session starts.</p>
+          </div>
+        </div>
+        <!-- Apology / Excuse button -->
+        <div id="excuseArea" style="display:none">
+          <button class="ap-btn ap-btn-outline" id="excuseBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Submit Apology / Excuse
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Attendance History -->
+    <div class="ap-card">
+      <div class="ap-card-header">
+        <h3>My Attendance History</h3>
+        <div class="ap-stats-row">
+          <div class="ap-stat"><span id="statPresent">0</span><small>Present</small></div>
+          <div class="ap-stat ap-stat-warn"><span id="statExcused">0</span><small>Excused</small></div>
+          <div class="ap-stat ap-stat-danger"><span id="statAbsent">0</span><small>Absent</small></div>
+        </div>
+      </div>
+      <div class="ap-table-wrap">
+        <table class="ap-table" id="myHistoryTable">
+          <thead><tr><th>Date</th><th>Session</th><th>Type</th><th>Status</th></tr></thead>
+          <tbody id="myHistoryBody">
+            <tr><td colspan="4" class="empty-row">No sessions yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 3 — ADMIN DASHBOARD
+══════════════════════════════════════ -->
+<div class="screen" id="screenAdmin">
+  <div class="ap-container">
+
+    <div class="admin-topbar">
+      <h2>Admin Dashboard</h2>
+      <p>Soh NOTED Ensemble — Attendance Management</p>
+    </div>
+
+    <!-- Admin tabs -->
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-tab="tabOverview">Overview</button>
+      <button class="admin-tab" data-tab="tabSessions">Sessions</button>
+      <button class="admin-tab" data-tab="tabLive">Live Attendance</button>
+      <button class="admin-tab" data-tab="tabReports">Reports</button>
+      <button class="admin-tab" data-tab="tabMembers">Members</button>
+    </div>
+
+    <!-- TAB: OVERVIEW -->
+    <div class="admin-tab-content active" id="tabOverview">
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-icon stat-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div><span class="stat-num" id="ovTotalMembers">0</span><span class="stat-lbl">Total Members</span></div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-icon stat-green">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div><span class="stat-num" id="ovActiveMembers">0</span><span class="stat-lbl">Active (≥70%)</span></div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-icon stat-orange">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+          </div>
+          <div><span class="stat-num" id="ovAtRisk">0</span><span class="stat-lbl">At Risk (40–69%)</span></div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-icon stat-red">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>
+          </div>
+          <div><span class="stat-num" id="ovInactive">0</span><span class="stat-lbl">Inactive (&lt;40%)</span></div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-icon stat-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+          </div>
+          <div><span class="stat-num" id="ovTotalSessions">0</span><span class="stat-lbl">Total Sessions</span></div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-icon stat-green">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div><span class="stat-num" id="ovLastSession">—</span><span class="stat-lbl">Last Session</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: SESSIONS -->
+    <div class="admin-tab-content" id="tabSessions">
+      <div class="section-actions">
+        <h3>Manage Sessions</h3>
+        <button class="ap-btn ap-btn-primary ap-btn-sm" id="newSessionBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+          New Session
+        </button>
+      </div>
+
+      <!-- New session form -->
+      <div class="inline-form" id="newSessionForm" style="display:none">
+        <h4>Create New Session</h4>
+        <div class="form-row-2">
+          <div class="ap-fg">
+            <label>Session Title</label>
+            <input type="text" id="sTitle" placeholder="e.g. Weekly Rehearsal"/>
+          </div>
+          <div class="ap-fg">
+            <label>Type</label>
+            <select id="sType">
+              <option value="Rehearsal">Rehearsal</option>
+              <option value="Concert">Concert</option>
+              <option value="Church Program">Church Program</option>
+              <option value="Meeting">Meeting</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row-3">
+          <div class="ap-fg">
+            <label>Date</label>
+            <input type="date" id="sDate"/>
+          </div>
+          <div class="ap-fg">
+            <label>Start Time</label>
+            <input type="time" id="sStart"/>
+          </div>
+          <div class="ap-fg">
+            <label>End Time</label>
+            <input type="time" id="sEnd"/>
+          </div>
+        </div>
+        <div class="ap-fg">
+          <label>Venue</label>
+          <input type="text" id="sVenue" placeholder="e.g. Kumasi, Ashanti Region"/>
+        </div>
+        <div class="form-row-2">
+          <div class="ap-fg">
+            <label>Check-in opens (mins before start)</label>
+            <input type="number" id="sOpenBefore" value="30" min="0" max="120"/>
+          </div>
+          <div class="ap-fg">
+            <label>Check-in closes (mins after start)</label>
+            <input type="number" id="sCloseAfter" value="60" min="0" max="180"/>
+          </div>
+        </div>
+        <div class="ap-fg">
+          <label>Session Code (auto-generated)</label>
+          <div class="code-preview">
+            <span class="big-code" id="previewCode">——</span>
+            <button type="button" class="text-btn" id="regenCode">Generate New</button>
+          </div>
+          <small>Announce this code at the venue only. It expires when check-in closes.</small>
+        </div>
+        <div class="inline-form-actions">
+          <button class="ap-btn ap-btn-primary" id="saveSessionBtn">Save Session</button>
+          <button class="ap-btn ap-btn-outline" id="cancelSessionBtn">Cancel</button>
+        </div>
+      </div>
+
+      <div class="ap-table-wrap">
+        <table class="ap-table" id="sessionsTable">
+          <thead><tr><th>Date</th><th>Title</th><th>Type</th><th>Time</th><th>Code</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="sessionsBody">
+            <tr><td colspan="7" class="empty-row">No sessions created yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB: LIVE ATTENDANCE -->
+    <div class="admin-tab-content" id="tabLive">
+      <div class="section-actions">
+        <h3>Live Attendance</h3>
+        <select class="ap-select" id="liveSessionSelect">
+          <option value="">Select a session</option>
+        </select>
+      </div>
+      <div class="live-code-box" id="liveCodeBox" style="display:none">
+        <div>
+          <p class="live-code-label">Session Code</p>
+          <p class="live-code-value" id="liveCode">——</p>
+        </div>
+        <div>
+          <p class="live-code-label">Check-in Window</p>
+          <p class="live-code-value" id="liveWindow" style="font-size:1.1rem">—</p>
+        </div>
+        <div class="live-counts">
+          <span class="pill-green" id="livePresentCount">0 Present</span>
+          <span class="pill-orange" id="liveExcusedCount">0 Excused</span>
+          <span class="pill-red" id="liveAbsentCount">0 Absent</span>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <input type="text" class="ap-search" id="liveSearch" placeholder="Search member name or ID..."/>
+        <select class="ap-select" id="liveVoiceFilter">
+          <option value="">All Voice Parts</option>
+          <option>Soprano</option>
+          <option>Mezzo-Soprano</option>
+          <option>Alto</option>
+          <option>Tenor</option>
+          <option>Baritone</option>
+          <option>Bass</option>
+          <option>Conductor</option>
+          <option>Pianist / Accompanist</option>
+        </select>
+      </div>
+
+      <div class="ap-table-wrap">
+        <table class="ap-table" id="liveTable">
+          <thead><tr><th>Member ID</th><th>Name</th><th>Voice Part</th><th>Status</th><th>Time</th><th>Override</th></tr></thead>
+          <tbody id="liveBody">
+            <tr><td colspan="6" class="empty-row">Select a session above to see live attendance.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB: REPORTS -->
+    <div class="admin-tab-content" id="tabReports">
+      <div class="section-actions">
+        <h3>Attendance Reports</h3>
+        <div class="btn-group">
+          <button class="ap-btn ap-btn-outline ap-btn-sm" id="exportCsvBtn">Export CSV</button>
+        </div>
+      </div>
+      <div class="filter-bar">
+        <input type="text" class="ap-search" id="reportSearch" placeholder="Search name or ID..."/>
+        <select class="ap-select" id="reportVoice">
+          <option value="">All Voice Parts</option>
+          <option>Soprano</option><option>Mezzo-Soprano</option><option>Alto</option>
+          <option>Tenor</option><option>Baritone</option><option>Bass</option>
+        </select>
+        <select class="ap-select" id="reportStatus">
+          <option value="">All Statuses</option>
+          <option value="active">Active (≥70%)</option>
+          <option value="risk">At Risk (40–69%)</option>
+          <option value="inactive">Inactive (&lt;40%)</option>
+        </select>
+      </div>
+      <div class="ap-table-wrap">
+        <table class="ap-table" id="reportTable">
+          <thead><tr><th>Member ID</th><th>Name</th><th>Voice Part</th><th>Present</th><th>Excused</th><th>Absent</th><th>%</th><th>Status</th></tr></thead>
+          <tbody id="reportBody">
+            <tr><td colspan="8" class="empty-row">No data yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB: MEMBERS -->
+    <div class="admin-tab-content" id="tabMembers">
+      <div class="section-actions">
+        <h3>Manage Members</h3>
+        <button class="ap-btn ap-btn-primary ap-btn-sm" id="addMemberBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+          Add Member
+        </button>
+      </div>
+
+      <!-- Add member form -->
+      <div class="inline-form" id="addMemberForm" style="display:none">
+        <h4>Add New Member</h4>
+        <div class="form-row-2">
+          <div class="ap-fg">
+            <label>Full Name</label>
+            <input type="text" id="mName" placeholder="Member's full name"/>
+          </div>
+          <div class="ap-fg">
+            <label>Member ID</label>
+            <input type="text" id="mId" placeholder="e.g. SNE-2024-4821" readonly/>
+            <small>Auto-generated</small>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="ap-fg">
+            <label>Voice Part</label>
+            <select id="mVoice">
+              <option>Soprano</option><option>Mezzo-Soprano</option><option>Alto</option>
+              <option>Tenor</option><option>Baritone</option><option>Bass</option>
+              <option>Conductor</option><option>Pianist / Accompanist</option>
+            </select>
+          </div>
+          <div class="ap-fg">
+            <label>Role</label>
+            <select id="mRole">
+              <option>Chorister</option><option>Section Leader</option>
+              <option>Assistant Director</option><option>Musical Director</option>
+              <option>Accompanist</option><option>Secretary</option>
+              <option>Treasurer</option><option>Publicity Officer</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="ap-fg">
+            <label>Phone</label>
+            <input type="tel" id="mPhone" placeholder="0XX XXX XXXX"/>
+          </div>
+          <div class="ap-fg">
+            <label>Year Joined</label>
+            <input type="number" id="mYear" placeholder="e.g. 2024" min="2000" max="2030"/>
+          </div>
+        </div>
+        <div class="ap-fg">
+          <label>Temporary PIN (member changes on first login)</label>
+          <input type="text" id="mPin" placeholder="e.g. 1234" maxlength="6"/>
+        </div>
+        <div class="ap-error" id="memberFormError"></div>
+        <div class="inline-form-actions">
+          <button class="ap-btn ap-btn-primary" id="saveMemberBtn">Save Member</button>
+          <button class="ap-btn ap-btn-outline" id="cancelMemberBtn">Cancel</button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <input type="text" class="ap-search" id="memberSearch" placeholder="Search name or ID..."/>
+        <select class="ap-select" id="memberVoiceFilter">
+          <option value="">All Voice Parts</option>
+          <option>Soprano</option><option>Mezzo-Soprano</option><option>Alto</option>
+          <option>Tenor</option><option>Baritone</option><option>Bass</option>
+        </select>
+        <select class="ap-select" id="memberStatusFilter">
+          <option value="">All</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div class="ap-table-wrap">
+        <table class="ap-table" id="membersTable">
+          <thead><tr><th>Member ID</th><th>Name</th><th>Voice Part</th><th>Role</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="membersBody">
+            <tr><td colspan="7" class="empty-row">No members added yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ EXCUSE MODAL ══ -->
+<div class="ap-modal-overlay" id="excuseModal">
+  <div class="ap-modal">
+    <div class="ap-modal-head">
+      <h3>Submit Apology / Excuse</h3>
+      <button class="ap-modal-close" id="excuseModalClose">✕</button>
+    </div>
+    <div class="ap-modal-body">
+      <div class="ap-fg">
+        <label>Reason for absence</label>
+        <select id="excuseReason">
+          <option value="">Select reason</option>
+          <option>Illness / Medical</option>
+          <option>Work / School</option>
+          <option>Family Emergency</option>
+          <option>Travel</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="ap-fg">
+        <label>Details (optional)</label>
+        <textarea id="excuseDetails" rows="3" placeholder="Any extra details..."></textarea>
+      </div>
+      <div class="ap-error" id="excuseError"></div>
+    </div>
+    <div class="ap-modal-foot">
+      <button class="ap-btn ap-btn-outline" id="excuseCancel">Cancel</button>
+      <button class="ap-btn ap-btn-primary" id="excuseSubmit">Submit Excuse</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="ap-toast" id="apToast"></div>
+
+<script src="js/attendance.js"></script>
+</body>
+</html>
