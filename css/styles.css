@@ -392,7 +392,7 @@ button { font-family: var(--fb); cursor: pointer }
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(4,1fr);
-  grid-template-rows: repeat(2,210px);
+  grid-template-rows: 220px 220px 220px;
   gap: 12px;
 }
 .g-item {
@@ -409,21 +409,11 @@ button { font-family: var(--fb); cursor: pointer }
 .g-over {
   position: absolute; inset: 0; background: rgba(13,22,54,0);
   display: flex; align-items: center; justify-content: center;
-  transition: background var(--ease);
+  transition: background var(--ease); z-index: 1;
 }
-.g-item:hover .g-over { background: rgba(13,22,54,.56) }
+.g-item:hover .g-over { background: rgba(13,22,54,.52) }
 .g-over svg { opacity: 0; color: #fff; transition: opacity var(--ease) }
 .g-item:hover .g-over svg { opacity: 1 }
-
-.g-lbl {
-  position: absolute; bottom: 12px; left: 14px;
-  font-size: .66rem; font-weight: 700; letter-spacing: .08em;
-  text-transform: uppercase; color: rgba(255,255,255,.45);
-  z-index: 1;
-}
-
-/* Gallery placeholder icon */
-.g-ph { position: relative; z-index: 0 }
 
 /* ══════════════════════════════════════════
    TEAM
@@ -875,7 +865,6 @@ button { font-family: var(--fb); cursor: pointer }
 
   .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto }
   .g-item:first-child { grid-column: span 2 }
-
   .team-grid   { grid-template-columns: repeat(2,1fr) }
   .footer-grid { grid-template-columns: 1fr 1fr }
   .footer-bot  { flex-direction: column; gap: 8px; text-align: center }
