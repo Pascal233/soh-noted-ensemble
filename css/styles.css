@@ -337,11 +337,12 @@ button{font-family:var(--fb);cursor:pointer}
   box-shadow:var(--sh2);margin-bottom:52px;
 }
 .ed-avatar{
-  width:300px;height:380px;border-radius:var(--rl);
-  background:var(--navy);border:1px solid var(--g100);
+  width:300px;height:445px;border-radius:var(--rl);
+  background:var(--white);border:1px solid var(--g100);
   overflow:hidden;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
 }
-.ed-avatar img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.ed-avatar img{width:100%;height:100%;object-fit:contain;object-position:center}
 
 .ed-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .ed-badge-role{display:inline-block;background:var(--navy);color:#fff;font-family:var(--fb);font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:50px}
@@ -587,7 +588,7 @@ button{font-family:var(--fb);cursor:pointer}
   .about-badge{width:88px;height:88px;bottom:-14px;right:-14px}
 
   .ed-card  {grid-template-columns:1fr;text-align:center;padding:28px;gap:24px}
-  .ed-avatar{width:180px;height:220px;margin:0 auto}
+  .ed-avatar{width:200px;height:296px;margin:0 auto}
   .ed-badges{justify-content:center}
   .ed-tags  {justify-content:center}
   .rule-l   {margin:14px auto 10px !important}
@@ -605,7 +606,7 @@ button{font-family:var(--fb);cursor:pointer}
   .footer-grid{grid-template-columns:1fr}
   .cc-foot    {flex-direction:column;gap:12px;align-items:flex-start}
   .wwd-grid   {grid-template-columns:1fr}
-  .ed-avatar  {width:140px;height:170px}
+  .ed-avatar  {width:160px;height:237px}
   .gallery-grid{grid-template-columns:1fr 1fr;grid-auto-rows:160px}
   .g-item:nth-child(1){grid-column:span 2;grid-row:span 1}
 }
