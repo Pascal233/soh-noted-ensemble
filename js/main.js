@@ -425,43 +425,9 @@ function closeLightbox() {
   setTimeout(() => { lbImg.src = ''; }, 300);
 }
 
-// Wire up after DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-
-  // Gallery tiles — click the whole .g-item
-  document.querySelectorAll('.g-item').forEach(item => {
-    item.style.cursor = 'zoom-in';
-    item.addEventListener('click', () => {
-      const img = item.querySelector('img.lb-trigger');
-      if (img) openLightbox(img.src, img.alt);
-    });
-  });
-
-  // ED avatar — click the container
-  const edAv = document.querySelector('.ed-avatar');
-  if (edAv) {
-    edAv.style.cursor = 'zoom-in';
-    edAv.addEventListener('click', () => {
-      const img = edAv.querySelector('img.lb-trigger');
-      if (img) openLightbox(img.src, img.alt);
-    });
-  }
-
-  // About image — click the container
-  const aboutBox = document.querySelector('.about-img-box');
-  if (aboutBox) {
-    aboutBox.style.cursor = 'zoom-in';
-    aboutBox.addEventListener('click', () => {
-      const img = aboutBox.querySelector('img.lb-trigger');
-      if (img) openLightbox(img.src, img.alt);
-    });
-  }
-
-});
-
 // Close on backdrop click
 lightbox?.addEventListener('click', e => {
-  if (e.target === lightbox || e.target === lbImg) closeLightbox();
+  if (e.target === lightbox) closeLightbox();
 });
 
 // Close button
