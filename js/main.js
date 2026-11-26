@@ -368,12 +368,39 @@ document.getElementById('memberForm')?.addEventListener('submit', function(e) {
   document.getElementById('mcNote').style.display    = 'flex';
   document.querySelector('.mc-hint').style.display   = 'none';
 
+  // Update note to show default PIN
+  const defaultPin4 = phone.replace(/\D/g,'').slice(-4) || '1234';
+  const noteEl = document.getElementById('mcNote');
+  if (noteEl) {
+    noteEl.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+      <span>Screenshot your card. To sign in to Attendance, use your Member ID <strong>${memberID}</strong> and your default PIN: <strong>${defaultPin4}</strong> (last 4 digits of your phone). Change your PIN after first login.</span>
+    `;
+  }
+
   // Restore button
   btn.classList.remove('loading');
   btn.innerHTML = orig;
   btn.disabled  = false;
 
-  showToast('Your Member ID is ready: ' + memberID, 'success');
+  // ── AUTO-REGISTER member so they can log into Attendance immediately ──
+  const defaultPin = phone.replace(/\D/g,'').slice(-4) || '1234';
+  const existing   = JSON.parse(localStorage.getItem('sne_m') || '[]');
+  const alreadyIn  = existing.find(m => m.id === memberID);
+  if (!alreadyIn) {
+    // Hash PIN the same way attendance.js does
+    function _hp(p){ let h=0; for(let i=0;i<p.length;i++){h=Math.imul(31,h)+p.charCodeAt(i)|0;} return h.toString(16); }
+    existing.push({
+      id: memberID, name, voice, role, phone, year,
+      pin: _hp(defaultPin),
+      status: 'active', isAdmin: false,
+      joinedAt: new Date().toISOString()
+    });
+    localStorage.setItem('sne_m', JSON.stringify(existing));
+    showToast('ID ready: ' + memberID + '  |  Default PIN: ' + defaultPin, 'success');
+  } else {
+    showToast('Your Member ID is ready: ' + memberID, 'success');
+  }
 
   // Scroll card into view on mobile
   if (window.innerWidth <= 768) {
@@ -1100,3 +1127,41 @@ document.getElementById('contactForm')?.addEventListener('submit', function save
   });
   localStorage.setItem('sne_msgs', JSON.stringify(msgs));
 }, true); // capture phase so it fires before the existing submit handler
+
+// ══════════════════════════════════════════════
+// PORTAL TAB SWITCHING (My ID Card ↔ Attendance)
+// ══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.portal-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Update tab active state
+      document.querySelectorAll('.portal-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      // Show correct panel
+      const target = tab.dataset.ptab;
+      document.querySelectorAll('.portal-panel').forEach(p => p.classList.remove('active'));
+      const panel = document.getElementById(target);
+      if (panel) panel.classList.add('active');
+
+      // If switching to Attendance tab, re-init the attendance login
+      if (target === 'ptAttendance') {
+        const CU = getStoredUser ? getStoredUser() : null;
+        // If not logged in, make sure login screen is showing
+        if (!CU) {
+          document.querySelectorAll('.att-view').forEach(v => v.classList.remove('active'));
+          const loginView = document.getElementById('attViewLogin');
+          if (loginView) loginView.classList.add('active');
+        }
+      }
+    });
+  });
+});
+
+// Helper used by attendance inline portal
+function getStoredUser() {
+  const id = sessionStorage.getItem('sne_att_user');
+  if (!id) return null;
+  const ms = JSON.parse(localStorage.getItem('sne_m') || '[]');
+  return ms.find(m => m.id === id) || null;
+}
