@@ -175,9 +175,6 @@ document.getElementById('ticketForm')?.addEventListener('submit', e => {
   } else if (method === 'momo' || method === 'ussd') {
     closeTicketModal();
     openMomoModal(name, total, activeConcert, qty, type);
-  } else if (method === 'door') {
-    closeTicketModal();
-    showToast('Reservation confirmed! Please pay at the venue.', 'success');
   }
 });
 
@@ -238,9 +235,11 @@ document.getElementById('contactForm')?.addEventListener('submit', function(e) {
   e.preventDefault();
   const btn = this.querySelector('button[type="submit"]');
   const orig = btn.innerHTML;
-  btn.textContent = 'Sending…';
+  btn.classList.add('loading');
   btn.disabled = true;
+  // TODO: replace setTimeout with real API call to backend
   setTimeout(() => {
+    btn.classList.remove('loading');
     btn.innerHTML = orig;
     btn.disabled  = false;
     this.reset();
@@ -311,6 +310,11 @@ function getInitials(name) {
 document.getElementById('memberForm')?.addEventListener('submit', function(e) {
   e.preventDefault();
 
+  const btn  = this.querySelector('button[type="submit"]');
+  const orig = btn.innerHTML;
+  btn.classList.add('loading');
+  btn.disabled = true;
+
   const name     = document.getElementById('mFullName')?.value.trim();
   const voice    = document.getElementById('mVoicePart')?.value;
   const role     = document.getElementById('mRole')?.value;
@@ -319,6 +323,9 @@ document.getElementById('memberForm')?.addEventListener('submit', function(e) {
   const email    = document.getElementById('mEmail')?.value.trim();
 
   if (!name || !voice || !role || !phone || !year) {
+    btn.classList.remove('loading');
+    btn.innerHTML = orig;
+    btn.disabled = false;
     showToast('Please fill in all required fields.', 'error');
     return;
   }
@@ -354,6 +361,11 @@ document.getElementById('memberForm')?.addEventListener('submit', function(e) {
   document.getElementById('mcActions').style.display = 'flex';
   document.getElementById('mcNote').style.display    = 'flex';
   document.querySelector('.mc-hint').style.display   = 'none';
+
+  // Restore button
+  btn.classList.remove('loading');
+  btn.innerHTML = orig;
+  btn.disabled  = false;
 
   showToast('Your Member ID is ready: ' + memberID, 'success');
 

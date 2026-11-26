@@ -450,11 +450,10 @@
     <div class="member-grid">
 
       <!-- Left — Form -->
-      <div class="member-form-box fu">
+      <div class="form-box fu">
         <h3>Generate Your ID Card</h3>
         <p class="mf-desc">Enter your details exactly as registered with the ensemble. Your unique ID will be generated instantly.</p>
-
-        <form id="memberForm" novalidate autocomplete="off">
+        <form id="memberForm" data-form="member-id" novalidate autocomplete="off">
           <div class="fg">
             <label for="mFullName">Full Name</label>
             <input type="text" id="mFullName" placeholder="e.g. Kwame Asante" required/>
@@ -516,15 +515,14 @@
             <input type="email" id="mEmail" placeholder="you@email.com"/>
           </div>
 
-          <button type="submit" class="btn btn-p" style="width:100%;justify-content:center;margin-top:4px">
+          <button type="submit" class="btn btn-p btn-submit" style="width:100%;justify-content:center;margin-top:4px">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
             Generate My Member ID
           </button>
         </form>
       </div>
 
-      <!-- Right — ID Card Preview -->
-      <div class="member-card-wrap fu">
+      <!-- Right — ID Card Preview -->      <div class="member-card-wrap fu">
         <p class="mc-hint">Your digital ID card will appear here</p>
 
         <div class="id-card" id="idCard">
@@ -676,9 +674,9 @@
         </div>
       </div>
 
-      <div class="cform-box fu">
+      <div class="form-box fu">
         <h3>Send Us a Message</h3>
-        <form id="contactForm" novalidate>
+        <form id="contactForm" data-form="contact" novalidate>
           <div class="frow">
             <div class="fg"><label for="cName">Full Name</label><input type="text" id="cName" name="name" placeholder="Your full name" required autocomplete="name"/></div>
             <div class="fg"><label for="cEmail">Email Address</label><input type="email" id="cEmail" name="email" placeholder="you@email.com" required autocomplete="email"/></div>
@@ -696,7 +694,7 @@
             </select>
           </div>
           <div class="fg"><label for="cMessage">Message</label><textarea id="cMessage" name="message" rows="5" placeholder="Tell us how we can help..." required></textarea></div>
-          <button type="submit" class="btn btn-p">
+          <button type="submit" class="btn btn-p btn-submit">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             Send Message
           </button>
@@ -750,7 +748,7 @@
       </button>
     </div>
     <div class="mbody">
-      <form id="ticketForm" novalidate>
+      <form id="ticketForm" data-form="ticket" novalidate>
         <div class="tsumm"><h4>Venue: <span id="modalVenueName"></span></h4></div>
         <div class="frow">
           <div class="fg">
