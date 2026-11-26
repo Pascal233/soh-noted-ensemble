@@ -158,6 +158,8 @@ document.getElementById('adminLogout')?.addEventListener('click',()=>{
 // Mobile sidebar toggle
 document.getElementById('adminMenuTog')?.addEventListener('click',()=>{
   document.getElementById('adminSidebar').classList.toggle('open');
+  const overlay = document.getElementById('sidebarOverlay');
+  if (overlay) overlay.style.display = document.getElementById('adminSidebar').classList.contains('open') ? 'block' : 'none';
 });
 
 // ═══════════════════════════════════════════
@@ -185,6 +187,10 @@ function goPage(pageId){
   document.querySelector(`[data-page="${pageId}"]`)?.classList.add('active');
   const titles={pageOverview:'Overview',pageTickets:'Ticket Orders',pageConcerts:'Concerts',pageMembers:'Choir Members',pageAttendance:'Attendance',pageMessages:'Messages',pageSettings:'Settings'};
   document.getElementById('pageTitle').textContent=titles[pageId]||'';
+  // Close sidebar on mobile
+  document.getElementById('adminSidebar').classList.remove('open');
+  const overlay = document.getElementById('sidebarOverlay');
+  if (overlay) overlay.style.display = 'none';
   // Load page data
   if(pageId==='pageOverview')   loadOverview();
   if(pageId==='pageTickets')    loadTickets();
