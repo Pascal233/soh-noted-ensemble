@@ -437,3 +437,620 @@ lbClose?.addEventListener('click', closeLightbox);
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && lightbox?.classList.contains('open')) closeLightbox();
 });
+
+
+// ══════════════════════════════════════════════
+// ATTENDANCE PORTAL (embedded in main site)
+// ══════════════════════════════════════════════
+(function(){
+'use strict';
+
+// ── Storage ──
+const G = k => { try { return JSON.parse(localStorage.getItem(k))||[]; } catch{return[];} };
+const S = (k,v) => localStorage.setItem(k,JSON.stringify(v));
+const KM='sne_m', KS='sne_s', KR='sne_r';
+
+// ── Hash ──
+function hp(pin){
+  let h=0;
+  for(let i=0;i<pin.length;i++){h=Math.imul(31,h)+pin.charCodeAt(i)|0;}
+  return h.toString(16);
+}
+
+// ── Seed admin ──
+function seedAdmin(){
+  let ms=G(KM);
+  if(!ms.find(m=>m.id==='SNE-ADMIN-0001')){
+    ms.push({id:'SNE-ADMIN-0001',name:'Frederick Owusu Boakye',voice:'Conductor',
+      role:'Executive Director',phone:'0548580708',year:'2015',
+      pin:hp('moxart2024'),status:'active',isAdmin:true});
+    S(KM,ms);
+  }
+}
+
+// ── Current user ──
+let CU=null;
+function getStoredUser(){
+  const id=sessionStorage.getItem('sne_att_user');
+  if(!id) return null;
+  return G(KM).find(m=>m.id===id)||null;
+}
+function loginAtt(m){ sessionStorage.setItem('sne_att_user',m.id); CU=m; }
+function attLogout(){ sessionStorage.removeItem('sne_att_user'); CU=null; showAttView('attViewLogin'); }
+window.attLogout=attLogout;
+
+// ── Views ──
+function showAttView(id){
+  document.querySelectorAll('.att-view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+}
+
+// ── Toast ──
+function attToast(msg,type=''){
+  showToast(msg, type); // reuse main site toast
+}
+
+// ── Helpers ──
+function fmtDate(d){
+  if(!d) return '—';
+  return new Date(d+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+}
+function fmtTime(iso){
+  if(!iso) return '—';
+  return new Date(iso).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+function cap(s){ return s?s.charAt(0).toUpperCase()+s.slice(1):''; }
+function genId(name,phone,year){
+  const seed=(name+phone+year).toLowerCase().replace(/\s/g,'');
+  let h=0;
+  for(let i=0;i<seed.length;i++){h=((h<<5)-h)+seed.charCodeAt(i);h|=0;}
+  return 'SNE-'+year+'-'+(Math.abs(h)%9000+1000);
+}
+function genCode(){ return Math.floor(100000+Math.random()*900000).toString(); }
+
+// ── Stats ──
+function stats(memberId){
+  const sessions=G(KS), records=G(KR);
+  let p=0,e=0,a=0;
+  sessions.forEach(s=>{
+    const r=records.find(r=>r.sId===s.id&&r.mId===memberId);
+    if(!r||r.status==='absent') a++;
+    else if(r.status==='present') p++;
+    else e++;
+  });
+  const tot=sessions.length;
+  const pct=tot>0?Math.round(p/tot*100):0;
+  return {p,e,a,tot,pct};
+}
+function statusInfo(pct){
+  if(pct>=70) return {lbl:'Active',cls:'att-pill-green'};
+  if(pct>=40) return {lbl:'At Risk',cls:'att-pill-amber'};
+  return {lbl:'Inactive',cls:'att-pill-red'};
+}
+function getRecord(sId,mId){ return G(KR).find(r=>r.sId===sId&&r.mId===mId); }
+function setRecord(sId,mId,status,extra={}){
+  let rs=G(KR);
+  const i=rs.findIndex(r=>r.sId===sId&&r.mId===mId);
+  const rec={sId,mId,status,time:new Date().toISOString(),...extra};
+  if(i>=0) rs[i]=rec; else rs.push(rec);
+  S(KR,rs);
+}
+function getTodaySes(){
+  const today=new Date().toISOString().split('T')[0];
+  return G(KS).find(s=>s.date===today)||null;
+}
+function sesTiming(s){
+  const now=new Date();
+  const start=new Date(s.date+'T'+s.start);
+  const openAt=new Date(start.getTime()-s.openBefore*60000);
+  const closeAt=new Date(start.getTime()+s.closeAfter*60000);
+  if(now<openAt) return {status:'upcoming',openAt};
+  if(now>closeAt) return {status:'closed'};
+  return {status:'open',closeAt};
+}
+
+let attSesCode='';
+
+// ── LOGIN ──
+function initAttLogin(){
+  document.getElementById('attPinToggle')?.addEventListener('click',()=>{
+    const f=document.getElementById('attPin');
+    f.type=f.type==='password'?'text':'password';
+  });
+  document.getElementById('attShowSetup')?.addEventListener('click',()=>{
+    document.getElementById('attSetupBox').style.display='block';
+    document.querySelector('#attViewLogin .att-login-box').style.display='none';
+  });
+  document.getElementById('attHideSetup')?.addEventListener('click',()=>{
+    document.getElementById('attSetupBox').style.display='none';
+    document.querySelector('#attViewLogin .att-login-box').style.display='block';
+  });
+
+  document.getElementById('attLoginForm')?.addEventListener('submit',e=>{
+    e.preventDefault();
+    const id=document.getElementById('attId').value.trim().toUpperCase();
+    const pin=document.getElementById('attPin').value.trim();
+    const err=document.getElementById('attLoginErr');
+    err.textContent='';
+    const m=G(KM).find(m=>m.id===id);
+    if(!m){err.textContent='Member ID not found. Contact the secretary.';return;}
+    if(m.status==='inactive'){err.textContent='Account deactivated. Contact admin.';return;}
+    if(m.pin!==hp(pin)){err.textContent='Incorrect PIN. Try again or ask admin to reset.';return;}
+    loginAtt(m);
+    if(m.isAdmin){showAttView('attViewAdmin');initAttAdmin();}
+    else{showAttView('attViewMember');loadAttMember();}
+  });
+
+  document.getElementById('attSetupForm')?.addEventListener('submit',e=>{
+    e.preventDefault();
+    const id=document.getElementById('attSetupId').value.trim().toUpperCase();
+    const pin=document.getElementById('attSetupPin').value.trim();
+    const pin2=document.getElementById('attSetupPin2').value.trim();
+    const err=document.getElementById('attSetupErr');
+    err.textContent='';
+    if(pin.length<4){err.textContent='PIN must be at least 4 digits.';return;}
+    if(pin!==pin2){err.textContent='PINs do not match.';return;}
+    let ms=G(KM);
+    const i=ms.findIndex(m=>m.id===id);
+    if(i<0){err.textContent='Member ID not found.';return;}
+    ms[i].pin=hp(pin);
+    S(KM,ms);
+    loginAtt(ms[i]);
+    showAttView('attViewMember');
+    loadAttMember();
+    attToast('PIN set! Welcome to the portal.','success');
+  });
+}
+
+// ── MEMBER DASHBOARD ──
+function loadAttMember(){
+  if(!CU) return;
+  document.getElementById('attMemberName').textContent=CU.name;
+  document.getElementById('attMemberRole').textContent=CU.role;
+  document.getElementById('attMemberVoice').textContent=CU.voice;
+  document.getElementById('attMemberIdDisp').textContent=CU.id;
+  const st=stats(CU.id);
+  document.getElementById('attPct').textContent=st.pct+'%';
+  loadAttTodaySession();
+  loadAttHistory();
+}
+
+function loadAttTodaySession(){
+  if(!CU) return;
+  const ses=getTodaySes();
+  const noSes=document.getElementById('attNoSession');
+  const detail=document.getElementById('attSessionDetails');
+  const badge=document.getElementById('attTypeBadge');
+  if(!ses){noSes.style.display='flex';detail.style.display='none';badge.textContent='—';return;}
+  noSes.style.display='none';detail.style.display='block';
+  badge.textContent=ses.type;
+  document.getElementById('attSessionTitle').textContent=ses.title;
+  document.getElementById('attSessionDate').textContent=fmtDate(ses.date);
+  document.getElementById('attSessionTime').textContent=ses.start+' – '+ses.end;
+  document.getElementById('attSessionVenue').textContent=ses.venue;
+  renderCheckinState(ses);
+}
+
+function renderCheckinState(ses){
+  const rec=getRecord(ses.id,CU.id);
+  const timing=sesTiming(ses);
+  ['attCheckedIn','attExcusedShown','attCodeForm','attWindowClosed','attNotYet'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display='none';
+  });
+  document.getElementById('attExcuseBtn').style.display='none';
+
+  if(rec&&rec.status==='present'){
+    const el=document.getElementById('attCheckedIn');
+    el.style.display='flex';
+    document.getElementById('attCheckinTime').textContent='Checked in at '+fmtTime(rec.time);
+  } else if(rec&&rec.status==='excused'){
+    const el=document.getElementById('attExcusedShown');
+    el.style.display='flex';
+    document.getElementById('attExcuseShownReason').textContent=rec.excuseReason||'—';
+  } else if(timing.status==='open'){
+    document.getElementById('attCodeForm').style.display='block';
+    document.getElementById('attExcuseBtn').style.display='block';
+    initAttCodeBoxes(ses);
+  } else if(timing.status==='upcoming'){
+    document.getElementById('attNotYet').style.display='block';
+    document.getElementById('attOpensIn').textContent=ses.openBefore+' mins';
+    document.getElementById('attExcuseBtn').style.display='block';
+  } else {
+    document.getElementById('attWindowClosed').style.display='flex';
+  }
+}
+
+function initAttCodeBoxes(ses){
+  const boxes=document.querySelectorAll('.att-code-box');
+  boxes.forEach((b,i)=>{
+    b.value='';
+    b.oninput=()=>{ b.value=b.value.replace(/\D/g,''); if(b.value&&i<boxes.length-1) boxes[i+1].focus(); };
+    b.onkeydown=e=>{ if(e.key==='Backspace'&&!b.value&&i>0) boxes[i-1].focus(); };
+  });
+  const btn=document.getElementById('attSubmitCode');
+  const newBtn=btn.cloneNode(true);
+  btn.parentNode.replaceChild(newBtn,btn);
+  newBtn.addEventListener('click',()=>{
+    const entered=Array.from(boxes).map(b=>b.value).join('');
+    const err=document.getElementById('attCodeErr');
+    err.textContent='';
+    if(entered.length<6){err.textContent='Enter all 6 digits.';return;}
+    if(sesTiming(ses).status!=='open'){err.textContent='Check-in window has closed.';return;}
+    if(entered!==ses.code){
+      err.textContent='Wrong code. Ask the director for the correct one.';
+      boxes.forEach(b=>{b.style.borderColor='var(--crimson)';b.value='';});
+      boxes[0].focus();
+      return;
+    }
+    setRecord(ses.id,CU.id,'present');
+    attToast('You are marked Present!','success');
+    loadAttTodaySession();
+  });
+}
+
+function loadAttHistory(){
+  if(!CU) return;
+  const st=stats(CU.id);
+  document.getElementById('attStatP').textContent=st.p;
+  document.getElementById('attStatE').textContent=st.e;
+  document.getElementById('attStatA').textContent=st.a;
+  const sessions=G(KS).sort((a,b)=>b.date.localeCompare(a.date));
+  const records=G(KR);
+  const tbody=document.getElementById('attHistoryBody');
+  if(!sessions.length){tbody.innerHTML='<tr><td colspan="4" class="att-empty-row">No sessions yet.</td></tr>';return;}
+  tbody.innerHTML=sessions.map(s=>{
+    const r=records.find(r=>r.sId===s.id&&r.mId===CU.id);
+    const status=r?r.status:'absent';
+    const cls=status==='present'?'att-pill-green':status==='excused'?'att-pill-amber':'att-pill-red';
+    return `<tr><td>${fmtDate(s.date)}</td><td>${s.title}</td><td><span class="att-pill att-pill-blue">${s.type}</span></td><td><span class="att-pill ${cls}">${cap(status)}</span></td></tr>`;
+  }).join('');
+}
+
+// Excuse
+document.getElementById('attOpenExcuse')?.addEventListener('click',()=>{ document.getElementById('attExcuseModal').classList.add('open'); });
+document.getElementById('attExcuseClose')?.addEventListener('click',closeAttExcuse);
+document.getElementById('attExcuseCancel')?.addEventListener('click',closeAttExcuse);
+function closeAttExcuse(){ document.getElementById('attExcuseModal').classList.remove('open'); }
+document.getElementById('attExcuseSubmit')?.addEventListener('click',()=>{
+  const reason=document.getElementById('attExcuseReason').value;
+  const details=document.getElementById('attExcuseDetails').value.trim();
+  const err=document.getElementById('attExcuseErr');
+  err.textContent='';
+  if(!reason){err.textContent='Please select a reason.';return;}
+  const ses=getTodaySes();
+  if(!ses||!CU) return;
+  setRecord(ses.id,CU.id,'excused',{excuseReason:reason,excuseDetails:details});
+  closeAttExcuse();
+  attToast('Excuse submitted.','success');
+  loadAttTodaySession();
+});
+
+// ── ADMIN ──
+function initAttAdmin(){
+  document.getElementById('attAdminName').textContent=CU.name;
+  document.querySelectorAll('.att-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      document.querySelectorAll('.att-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.att-panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      const panel=document.getElementById(tab.dataset.atab);
+      panel?.classList.add('active');
+      if(tab.dataset.atab==='atOverview') loadAttOverview();
+      if(tab.dataset.atab==='atSessions') loadAttSessions();
+      if(tab.dataset.atab==='atLive')     loadAttLive();
+      if(tab.dataset.atab==='atReports')  loadAttReports();
+      if(tab.dataset.atab==='atMembers')  loadAttMembers();
+    });
+  });
+  loadAttOverview();
+  initAttSessionsTab();
+  initAttLiveTab();
+  initAttReportsTab();
+  initAttMembersTab();
+}
+
+function loadAttOverview(){
+  const ms=G(KM).filter(m=>!m.isAdmin);
+  const ss=G(KS);
+  let active=0,risk=0,inactive=0;
+  ms.forEach(m=>{ const {pct}=stats(m.id); if(pct>=70)active++; else if(pct>=40)risk++; else inactive++; });
+  document.getElementById('ovTotal').textContent=ms.length;
+  document.getElementById('ovActive').textContent=active;
+  document.getElementById('ovRisk').textContent=risk;
+  document.getElementById('ovInactive').textContent=inactive;
+  document.getElementById('ovSessions').textContent=ss.length;
+  document.getElementById('ovLast').textContent=ss.length?fmtDate(ss.sort((a,b)=>b.date.localeCompare(a.date))[0].date):'—';
+}
+
+// Sessions tab
+function initAttSessionsTab(){
+  attSesCode=genCode();
+  document.getElementById('attCodePreview').textContent=attSesCode;
+  document.getElementById('attRegenCode')?.addEventListener('click',()=>{
+    attSesCode=genCode();
+    document.getElementById('attCodePreview').textContent=attSesCode;
+  });
+  document.getElementById('attNewSesBtn')?.addEventListener('click',()=>{
+    const f=document.getElementById('attNewSesForm');
+    f.style.display=f.style.display==='none'?'block':'none';
+    if(f.style.display==='block'){
+      document.getElementById('sDateI').value=new Date().toISOString().split('T')[0];
+      document.getElementById('sStartI').value='10:00';
+      document.getElementById('sEndI').value='13:00';
+      document.getElementById('sVenueI').value='Kumasi, Ashanti Region';
+      attSesCode=genCode();
+      document.getElementById('attCodePreview').textContent=attSesCode;
+    }
+  });
+  document.getElementById('attCancelSes')?.addEventListener('click',()=>{
+    document.getElementById('attNewSesForm').style.display='none';
+  });
+  document.getElementById('attSaveSes')?.addEventListener('click',()=>{
+    const title=document.getElementById('sTitleI').value.trim();
+    const type=document.getElementById('sTypeI').value;
+    const date=document.getElementById('sDateI').value;
+    const start=document.getElementById('sStartI').value;
+    const end=document.getElementById('sEndI').value;
+    const venue=document.getElementById('sVenueI').value.trim();
+    const before=parseInt(document.getElementById('sBeforeI').value)||30;
+    const after=parseInt(document.getElementById('sAfterI').value)||60;
+    if(!title||!date||!start||!end||!venue){attToast('Fill in all session fields.','error');return;}
+    const ss=G(KS);
+    ss.push({id:'S-'+Date.now(),title,type,date,start,end,venue,code:attSesCode,openBefore:before,closeAfter:after});
+    S(KS,ss);
+    document.getElementById('attNewSesForm').style.display='none';
+    loadAttSessions();
+    attToast('Session created!','success');
+  });
+  loadAttSessions();
+}
+function loadAttSessions(){
+  const ss=G(KS).sort((a,b)=>b.date.localeCompare(a.date));
+  const tbody=document.getElementById('attSesBody');
+  if(!ss.length){tbody.innerHTML='<tr><td colspan="7" class="att-empty-row">No sessions yet.</td></tr>';return;}
+  tbody.innerHTML=ss.map(s=>{
+    const t=sesTiming(s);
+    const sc=t.status==='open'?'att-pill-green':t.status==='upcoming'?'att-pill-blue':'att-pill-gray';
+    const pc=G(KR).filter(r=>r.sId===s.id&&r.status==='present').length;
+    return `<tr>
+      <td>${fmtDate(s.date)}</td><td><strong>${s.title}</strong></td>
+      <td><span class="att-pill att-pill-blue">${s.type}</span></td>
+      <td>${s.start}–${s.end}</td>
+      <td style="font-family:monospace;font-weight:700;letter-spacing:.15em;color:var(--navy)">${s.code}</td>
+      <td><span class="att-pill ${sc}">${cap(t.status)}</span> <small style="color:var(--t400)">(${pc} present)</small></td>
+      <td><button class="btn btn-p btn-sm" onclick="attDelSes('${s.id}')">Delete</button></td>
+    </tr>`;
+  }).join('');
+}
+window.attDelSes=function(id){
+  if(!confirm('Delete this session and all its records?')) return;
+  S(KS,G(KS).filter(s=>s.id!==id));
+  S(KR,G(KR).filter(r=>r.sId!==id));
+  loadAttSessions();
+  attToast('Session deleted.','');
+};
+
+// Live tab
+function initAttLiveTab(){
+  document.getElementById('attLiveSel')?.addEventListener('change',renderAttLive);
+  document.getElementById('attLiveSrch')?.addEventListener('input',renderAttLive);
+  document.getElementById('attLiveVoice')?.addEventListener('change',renderAttLive);
+  loadAttLive();
+}
+function loadAttLive(){
+  const sel=document.getElementById('attLiveSel');
+  if(!sel) return;
+  const ss=G(KS).sort((a,b)=>b.date.localeCompare(a.date));
+  const cur=sel.value;
+  sel.innerHTML='<option value="">Select session</option>'+ss.map(s=>`<option value="${s.id}"${s.id===cur?' selected':''}>${fmtDate(s.date)} — ${s.title}</option>`).join('');
+  if(cur) renderAttLive();
+}
+function renderAttLive(){
+  const sId=document.getElementById('attLiveSel').value;
+  const srch=(document.getElementById('attLiveSrch').value||'').toLowerCase();
+  const voice=document.getElementById('attLiveVoice').value;
+  const banner=document.getElementById('attLiveBanner');
+  if(!sId){banner.style.display='none';document.getElementById('attLiveBody').innerHTML='<tr><td colspan="6" class="att-empty-row">Select a session.</td></tr>';return;}
+  const ses=G(KS).find(s=>s.id===sId);
+  if(!ses) return;
+  banner.style.display='flex';
+  document.getElementById('attLiveCode').textContent=ses.code;
+  document.getElementById('attLiveWin').textContent=`Opens ${ses.openBefore}m before · Closes ${ses.closeAfter}m after`;
+  let ms=G(KM).filter(m=>!m.isAdmin);
+  if(voice) ms=ms.filter(m=>m.voice===voice);
+  if(srch) ms=ms.filter(m=>m.name.toLowerCase().includes(srch)||m.id.toLowerCase().includes(srch));
+  const rs=G(KR);
+  let pc=0,ec=0,ac=0;
+  const rows=ms.map(m=>{
+    const r=rs.find(r=>r.sId===sId&&r.mId===m.id);
+    const st=r?r.status:'absent';
+    if(st==='present')pc++; else if(st==='excused')ec++; else ac++;
+    const cls=st==='present'?'att-pill-green':st==='excused'?'att-pill-amber':'att-pill-red';
+    return `<tr>
+      <td style="font-family:monospace;font-size:.76rem">${m.id}</td>
+      <td><strong>${m.name}</strong></td><td>${m.voice}</td>
+      <td><span class="att-pill ${cls}">${cap(st)}</span></td>
+      <td>${r?fmtTime(r.time):'—'}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        ${st!=='present'?`<button class="btn btn-p btn-sm" onclick="attMarkP('${sId}','${m.id}')">Present</button>`:''}
+        ${st==='present'?`<button class="btn btn-o btn-sm" onclick="attRemoveP('${sId}','${m.id}')">Remove</button>`:''}
+      </td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="6" class="att-empty-row">No members match filter.</td></tr>';
+  document.getElementById('attLiveBody').innerHTML=rows;
+  document.getElementById('attLivePres').textContent=pc+' Present';
+  document.getElementById('attLiveExc').textContent=ec+' Excused';
+  document.getElementById('attLiveAbs').textContent=ac+' Absent';
+}
+window.attMarkP=function(sId,mId){ setRecord(sId,mId,'present'); renderAttLive(); attToast('Marked Present.','success'); };
+window.attRemoveP=function(sId,mId){ S(KR,G(KR).filter(r=>!(r.sId===sId&&r.mId===mId))); renderAttLive(); attToast('Mark removed.',''); };
+
+// Reports
+function initAttReportsTab(){
+  document.getElementById('attRptSrch')?.addEventListener('input',loadAttReports);
+  document.getElementById('attRptVoice')?.addEventListener('change',loadAttReports);
+  document.getElementById('attRptStatus')?.addEventListener('change',loadAttReports);
+  document.getElementById('attExportBtn')?.addEventListener('click',attExportCSV);
+}
+function loadAttReports(){
+  const srch=(document.getElementById('attRptSrch').value||'').toLowerCase();
+  const voice=document.getElementById('attRptVoice').value;
+  const filter=document.getElementById('attRptStatus').value;
+  let ms=G(KM).filter(m=>!m.isAdmin);
+  if(voice) ms=ms.filter(m=>m.voice===voice);
+  if(srch) ms=ms.filter(m=>m.name.toLowerCase().includes(srch)||m.id.toLowerCase().includes(srch));
+  const tbody=document.getElementById('attRptBody');
+  const rows=ms.map(m=>{
+    const st=stats(m.id);
+    const {lbl,cls}=statusInfo(st.pct);
+    const key=st.pct>=70?'active':st.pct>=40?'risk':'inactive';
+    if(filter&&filter!==key) return '';
+    return `<tr>
+      <td style="font-family:monospace;font-size:.76rem">${m.id}</td>
+      <td><strong>${m.name}</strong></td><td>${m.voice}</td>
+      <td style="color:#166534;font-weight:700">${st.p}</td>
+      <td style="color:#b45309;font-weight:700">${st.e}</td>
+      <td style="color:var(--crimson);font-weight:700">${st.a}</td>
+      <td><strong>${st.pct}%</strong></td>
+      <td><span class="att-pill ${cls}">${lbl}</span></td>
+    </tr>`;
+  }).filter(Boolean).join('')||'<tr><td colspan="8" class="att-empty-row">No results.</td></tr>';
+  tbody.innerHTML=rows;
+}
+function attExportCSV(){
+  const ms=G(KM).filter(m=>!m.isAdmin);
+  const ss=G(KS); const rs=G(KR);
+  let csv='ID,Name,Voice,Role,'+ss.map(s=>s.date+' '+s.title).join(',')+',Present,Excused,Absent,%,Status\n';
+  ms.forEach(m=>{
+    const st=stats(m.id);
+    const {lbl}=statusInfo(st.pct);
+    let row=`"${m.id}","${m.name}","${m.voice}","${m.role}",`;
+    ss.forEach(s=>{ const r=rs.find(r=>r.sId===s.id&&r.mId===m.id); row+=(r?cap(r.status):'Absent')+','; });
+    row+=`${st.p},${st.e},${st.a},${st.pct}%,"${lbl}"`;
+    csv+=row+'\n';
+  });
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='SNE_Attendance_'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click();
+  attToast('CSV exported!','success');
+}
+
+// Members
+function initAttMembersTab(){
+  ['mNameI','mPhoneI','mYearI'].forEach(id=>{
+    document.getElementById(id)?.addEventListener('blur',autoId);
+  });
+  function autoId(){
+    const n=document.getElementById('mNameI').value.trim();
+    const p=document.getElementById('mPhoneI').value.trim();
+    const y=document.getElementById('mYearI').value||new Date().getFullYear();
+    if(n&&p) document.getElementById('mIdI').value=genId(n,p,y);
+  }
+  document.getElementById('attAddMemBtn')?.addEventListener('click',()=>{
+    const f=document.getElementById('attAddMemForm');
+    f.style.display=f.style.display==='none'?'block':'none';
+  });
+  document.getElementById('attCancelMem')?.addEventListener('click',()=>{
+    document.getElementById('attAddMemForm').style.display='none';
+  });
+  document.getElementById('attSaveMem')?.addEventListener('click',()=>{
+    const name=document.getElementById('mNameI').value.trim();
+    const id=document.getElementById('mIdI').value.trim().toUpperCase();
+    const voice=document.getElementById('mVoiceI').value;
+    const role=document.getElementById('mRoleI').value;
+    const phone=document.getElementById('mPhoneI').value.trim();
+    const year=document.getElementById('mYearI').value.trim();
+    const pin=document.getElementById('mPinI').value.trim();
+    const err=document.getElementById('attMemErr');
+    err.textContent='';
+    if(!name||!id||!voice||!phone||!year||!pin){err.textContent='Fill in all fields.';return;}
+    if(pin.length<4){err.textContent='PIN must be at least 4 digits.';return;}
+    let ms=G(KM);
+    if(ms.find(m=>m.id===id)){err.textContent='This ID already exists.';return;}
+    ms.push({id,name,voice,role,phone,year,pin:hp(pin),status:'active',isAdmin:false});
+    S(KM,ms);
+    document.getElementById('attAddMemForm').style.display='none';
+    ['mNameI','mIdI','mPhoneI','mYearI','mPinI'].forEach(x=>document.getElementById(x).value='');
+    loadAttMembers();
+    loadAttOverview();
+    attToast(name+' added!','success');
+  });
+  document.getElementById('attMemSrch')?.addEventListener('input',loadAttMembers);
+  document.getElementById('attMemVoice')?.addEventListener('change',loadAttMembers);
+  loadAttMembers();
+}
+function loadAttMembers(){
+  const srch=(document.getElementById('attMemSrch').value||'').toLowerCase();
+  const voice=document.getElementById('attMemVoice').value;
+  let ms=G(KM).filter(m=>!m.isAdmin);
+  if(voice) ms=ms.filter(m=>m.voice===voice);
+  if(srch) ms=ms.filter(m=>m.name.toLowerCase().includes(srch)||m.id.toLowerCase().includes(srch));
+  const tbody=document.getElementById('attMemBody');
+  if(!ms.length){tbody.innerHTML='<tr><td colspan="7" class="att-empty-row">No members yet.</td></tr>';return;}
+  tbody.innerHTML=ms.map(m=>{
+    const sc=m.status==='active'?'att-pill-green':'att-pill-red';
+    return `<tr>
+      <td style="font-family:monospace;font-size:.76rem">${m.id}</td>
+      <td><strong>${m.name}</strong></td><td>${m.voice}</td><td>${m.role}</td><td>${m.year||'—'}</td>
+      <td><span class="att-pill ${sc}">${cap(m.status)}</span></td>
+      <td style="display:flex;gap:5px;flex-wrap:wrap">
+        <button class="btn btn-o btn-sm" onclick="attToggleStatus('${m.id}')">${m.status==='active'?'Deactivate':'Activate'}</button>
+        <button class="btn btn-o btn-sm" onclick="attResetPin('${m.id}')">Reset PIN</button>
+        <button class="btn btn-p btn-sm" style="background:var(--crimson);border-color:var(--crimson)" onclick="attDelMem('${m.id}')">Delete</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+window.attToggleStatus=function(id){
+  let ms=G(KM);
+  const i=ms.findIndex(m=>m.id===id);
+  if(i<0) return;
+  ms[i].status=ms[i].status==='active'?'inactive':'active';
+  S(KM,ms); loadAttMembers(); loadAttOverview();
+  attToast('Status updated.','success');
+};
+window.attResetPin=function(id){
+  const p=prompt('New temporary PIN for member '+id+' (4–6 digits):');
+  if(!p||p.length<4){attToast('PIN must be at least 4 digits.','error');return;}
+  let ms=G(KM);
+  const i=ms.findIndex(m=>m.id===id);
+  if(i<0) return;
+  ms[i].pin=hp(p); S(KM,ms);
+  attToast('PIN reset for '+ms[i].name+'.','success');
+};
+window.attDelMem=function(id){
+  const ms=G(KM);
+  const m=ms.find(mb=>mb.id===id);
+  if(!confirm('Delete '+m?.name+'? All attendance records will be removed.')) return;
+  S(KM,ms.filter(mb=>mb.id!==id));
+  S(KR,G(KR).filter(r=>r.mId!==id));
+  loadAttMembers(); loadAttOverview();
+  attToast('Member deleted.','');
+};
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded',()=>{
+  if(!document.getElementById('attViewLogin')) return; // not on the right page
+  seedAdmin();
+  CU=getStoredUser();
+  if(CU){
+    if(CU.isAdmin){showAttView('attViewAdmin');initAttAdmin();}
+    else{showAttView('attViewMember');loadAttMember();}
+  } else {
+    showAttView('attViewLogin');
+    initAttLogin();
+  }
+});
+
+// Re-init if user scrolls to section while already logged in
+document.getElementById('attendance')?.addEventListener('click',()=>{
+  if(CU) return;
+  if(!document.getElementById('attViewLogin').classList.contains('active')){
+    showAttView('attViewLogin');
+    initAttLogin();
+  }
+});
+
+})(); // end IIFE

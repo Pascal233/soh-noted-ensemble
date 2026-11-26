@@ -36,7 +36,7 @@
       <li><a href="#concerts">Concerts</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#members">Members</a></li>
-      <li><a href="attendance.html">Attendance</a></li>
+      <li><a href="#attendance">Attendance</a></li>
       <li><a href="#contact">Contact</a></li>
       <li>
         <a href="#concerts" class="nav-cta">
@@ -576,6 +576,314 @@
       </div>
 
     </div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════╗
+     ║      ATTENDANCE PORTAL       ║
+     ╚══════════════════════════════╝ -->
+<section id="attendance" class="sp att-sec" aria-labelledby="att-title">
+  <div class="container">
+    <div class="sh">
+      <span class="overline">Members Only</span>
+      <h2 class="section-title" id="att-title">Attendance Portal</h2>
+      <div class="rule"></div>
+      <p class="section-sub" style="margin-top:14px">Sign in with your Member ID and PIN to mark your attendance or manage the ensemble.</p>
+    </div>
+
+    <!-- ── LOGIN VIEW ── -->
+    <div class="att-view active" id="attViewLogin">
+      <div class="att-login-wrap">
+        <div class="att-login-box fu">
+          <h3>Sign In</h3>
+          <p class="att-sub">Use your Member ID and PIN to continue.</p>
+          <form id="attLoginForm" novalidate autocomplete="off">
+            <div class="fg">
+              <label for="attId">Member ID</label>
+              <input type="text" id="attId" placeholder="e.g. SNE-2024-4821" autocomplete="off" required/>
+            </div>
+            <div class="fg" style="position:relative">
+              <label for="attPin">PIN</label>
+              <input type="password" id="attPin" placeholder="Enter your PIN" maxlength="6" required/>
+              <button type="button" id="attPinToggle" style="position:absolute;right:12px;bottom:13px;background:none;border:none;cursor:pointer;color:var(--t400)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="att-error" id="attLoginErr"></div>
+            <button type="submit" class="btn btn-p" style="width:100%;justify-content:center">Sign In</button>
+          </form>
+          <p class="att-help">First time? <button class="att-text-btn" id="attShowSetup">Set your PIN here</button></p>
+        </div>
+
+        <!-- First-time PIN setup -->
+        <div class="att-login-box fu" id="attSetupBox" style="display:none">
+          <h3>Set Your PIN</h3>
+          <p class="att-sub">Enter your Member ID and choose a 4–6 digit PIN.</p>
+          <form id="attSetupForm" novalidate autocomplete="off">
+            <div class="fg">
+              <label for="attSetupId">Member ID</label>
+              <input type="text" id="attSetupId" placeholder="Your Member ID" required/>
+            </div>
+            <div class="fg">
+              <label for="attSetupPin">New PIN</label>
+              <input type="password" id="attSetupPin" placeholder="Choose 4–6 digits" maxlength="6" required/>
+            </div>
+            <div class="fg">
+              <label for="attSetupPin2">Confirm PIN</label>
+              <input type="password" id="attSetupPin2" placeholder="Repeat your PIN" maxlength="6" required/>
+            </div>
+            <div class="att-error" id="attSetupErr"></div>
+            <button type="submit" class="btn btn-p" style="width:100%;justify-content:center">Set PIN &amp; Sign In</button>
+          </form>
+          <p class="att-help"><button class="att-text-btn" id="attHideSetup">Back to Sign In</button></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MEMBER VIEW ── -->
+    <div class="att-view" id="attViewMember">
+      <div class="att-member-header">
+        <div>
+          <p class="att-welcome-label">Welcome back</p>
+          <h3 class="att-welcome-name" id="attMemberName">—</h3>
+          <p class="att-welcome-meta"><span id="attMemberRole">—</span> · <span id="attMemberVoice">—</span> · ID: <span id="attMemberIdDisp">—</span></p>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div class="att-pct-pill" id="attPctPill"><span id="attPct">—</span><small>Attendance</small></div>
+          <button class="btn btn-o btn-sm" onclick="attLogout()">Sign Out</button>
+        </div>
+      </div>
+
+      <!-- Today session -->
+      <div class="att-card" id="attTodayCard">
+        <div class="att-card-head">
+          <h4>Today's Session</h4>
+          <span class="att-type-badge" id="attTypeBadge">—</span>
+        </div>
+        <div id="attNoSession" class="att-empty">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+          <p>No session scheduled for today.</p>
+        </div>
+        <div id="attSessionDetails" style="display:none">
+          <p class="att-session-title" id="attSessionTitle">—</p>
+          <div class="att-session-meta">
+            <span id="attSessionDate">—</span>
+            <span id="attSessionTime">—</span>
+            <span id="attSessionVenue">—</span>
+          </div>
+          <!-- Check-in states -->
+          <div id="attCheckedIn" class="att-success" style="display:none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div><p>You are <strong>Present</strong></p><small id="attCheckinTime">—</small></div>
+          </div>
+          <div id="attExcusedShown" class="att-excused" style="display:none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+            <div><p>Excuse submitted</p><small id="attExcuseShownReason">—</small></div>
+          </div>
+          <div id="attCodeForm" style="display:none">
+            <p class="att-code-label">Enter the 6-digit code announced at the venue:</p>
+            <div class="att-code-row" id="attCodeBoxes">
+              <input class="att-code-box" maxlength="1" inputmode="numeric"/>
+              <input class="att-code-box" maxlength="1" inputmode="numeric"/>
+              <input class="att-code-box" maxlength="1" inputmode="numeric"/>
+              <input class="att-code-box" maxlength="1" inputmode="numeric"/>
+              <input class="att-code-box" maxlength="1" inputmode="numeric"/>
+              <input class="att-code-box" maxlength="1" inputmode="numeric"/>
+            </div>
+            <div class="att-error" id="attCodeErr"></div>
+            <button class="btn btn-p" id="attSubmitCode" style="margin-top:12px">Mark Me Present</button>
+          </div>
+          <div id="attWindowClosed" class="att-closed" style="display:none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>
+            <p>Check-in window has closed for this session.</p>
+          </div>
+          <div id="attNotYet" class="att-notyет" style="display:none">
+            <p>Check-in opens <strong id="attOpensIn">—</strong> before the session starts.</p>
+          </div>
+          <div id="attExcuseBtn" style="display:none;margin-top:12px">
+            <button class="btn btn-o btn-sm" id="attOpenExcuse">Submit Apology / Excuse</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- My history -->
+      <div class="att-card">
+        <div class="att-card-head">
+          <h4>My Attendance History</h4>
+          <div class="att-mini-stats">
+            <span class="att-ms att-ms-green">Present: <strong id="attStatP">0</strong></span>
+            <span class="att-ms att-ms-amber">Excused: <strong id="attStatE">0</strong></span>
+            <span class="att-ms att-ms-red">Absent: <strong id="attStatA">0</strong></span>
+          </div>
+        </div>
+        <div class="att-table-wrap">
+          <table class="att-table">
+            <thead><tr><th>Date</th><th>Session</th><th>Type</th><th>Status</th></tr></thead>
+            <tbody id="attHistoryBody"><tr><td colspan="4" class="att-empty-row">No sessions yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ADMIN VIEW ── -->
+    <div class="att-view" id="attViewAdmin">
+      <div class="att-admin-topbar">
+        <div>
+          <h3>Admin Dashboard</h3>
+          <p>Signed in as <strong id="attAdminName">—</strong> &nbsp;·&nbsp; <span class="att-admin-badge">Executive Director</span></p>
+        </div>
+        <button class="btn btn-o btn-sm" onclick="attLogout()">Sign Out</button>
+      </div>
+
+      <!-- Admin tabs -->
+      <div class="att-tabs">
+        <button class="att-tab active" data-atab="atOverview">Overview</button>
+        <button class="att-tab" data-atab="atSessions">Sessions</button>
+        <button class="att-tab" data-atab="atLive">Live Attendance</button>
+        <button class="att-tab" data-atab="atReports">Reports</button>
+        <button class="att-tab" data-atab="atMembers">Members</button>
+      </div>
+
+      <!-- OVERVIEW -->
+      <div class="att-panel active" id="atOverview">
+        <div class="att-stats-grid">
+          <div class="att-stat-box"><div class="att-stat-icon att-si-blue"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><span class="att-stat-n" id="ovTotal">0</span><span class="att-stat-l">Total Members</span></div></div>
+          <div class="att-stat-box"><div class="att-stat-icon att-si-green"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div><span class="att-stat-n" id="ovActive">0</span><span class="att-stat-l">Active (≥70%)</span></div></div>
+          <div class="att-stat-box"><div class="att-stat-icon att-si-amber"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg></div><div><span class="att-stat-n" id="ovRisk">0</span><span class="att-stat-l">At Risk (40–69%)</span></div></div>
+          <div class="att-stat-box"><div class="att-stat-icon att-si-red"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg></div><div><span class="att-stat-n" id="ovInactive">0</span><span class="att-stat-l">Inactive (&lt;40%)</span></div></div>
+          <div class="att-stat-box"><div class="att-stat-icon att-si-blue"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg></div><div><span class="att-stat-n" id="ovSessions">0</span><span class="att-stat-l">Total Sessions</span></div></div>
+          <div class="att-stat-box"><div class="att-stat-icon att-si-green"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><span class="att-stat-n" id="ovLast">—</span><span class="att-stat-l">Last Session</span></div></div>
+        </div>
+      </div>
+
+      <!-- SESSIONS -->
+      <div class="att-panel" id="atSessions">
+        <div class="att-panel-topbar">
+          <h4>Manage Sessions</h4>
+          <button class="btn btn-p btn-sm" id="attNewSesBtn">+ New Session</button>
+        </div>
+        <div class="att-inline-form" id="attNewSesForm" style="display:none">
+          <div class="att-form-row2">
+            <div class="fg"><label>Session Title</label><input type="text" id="sTitleI" placeholder="e.g. Weekly Rehearsal"/></div>
+            <div class="fg"><label>Type</label><select id="sTypeI"><option>Rehearsal</option><option>Concert</option><option>Church Program</option><option>Meeting</option><option>Other</option></select></div>
+          </div>
+          <div class="att-form-row3">
+            <div class="fg"><label>Date</label><input type="date" id="sDateI"/></div>
+            <div class="fg"><label>Start Time</label><input type="time" id="sStartI"/></div>
+            <div class="fg"><label>End Time</label><input type="time" id="sEndI"/></div>
+          </div>
+          <div class="fg"><label>Venue</label><input type="text" id="sVenueI" placeholder="e.g. Kumasi, Ashanti Region"/></div>
+          <div class="att-form-row2">
+            <div class="fg"><label>Open check-in (mins before start)</label><input type="number" id="sBeforeI" value="30" min="0" max="120"/></div>
+            <div class="fg"><label>Close check-in (mins after start)</label><input type="number" id="sAfterI" value="60" min="0" max="180"/></div>
+          </div>
+          <div class="fg">
+            <label>Session Code</label>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span class="att-big-code" id="attCodePreview">——</span>
+              <button type="button" class="att-text-btn" id="attRegenCode">Regenerate</button>
+            </div>
+            <small style="color:var(--t400);font-size:.74rem">Announce this code at the venue only.</small>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:4px">
+            <button class="btn btn-p btn-sm" id="attSaveSes">Save Session</button>
+            <button class="btn btn-o btn-sm" id="attCancelSes">Cancel</button>
+          </div>
+        </div>
+        <div class="att-table-wrap">
+          <table class="att-table"><thead><tr><th>Date</th><th>Title</th><th>Type</th><th>Time</th><th>Code</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="attSesBody"><tr><td colspan="7" class="att-empty-row">No sessions yet.</td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- LIVE -->
+      <div class="att-panel" id="atLive">
+        <div class="att-panel-topbar">
+          <h4>Live Attendance</h4>
+          <select class="att-select" id="attLiveSel"><option value="">Select session</option></select>
+        </div>
+        <div class="att-live-banner" id="attLiveBanner" style="display:none">
+          <div><p class="att-live-lbl">Code</p><p class="att-live-code" id="attLiveCode">——</p></div>
+          <div><p class="att-live-lbl">Window</p><p class="att-live-win" id="attLiveWin">—</p></div>
+          <div class="att-live-counts"><span class="att-pill att-pill-green" id="attLivePres">0 Present</span><span class="att-pill att-pill-amber" id="attLiveExc">0 Excused</span><span class="att-pill att-pill-red" id="attLiveAbs">0 Absent</span></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+          <input class="att-search" type="text" id="attLiveSrch" placeholder="Search name or ID…"/>
+          <select class="att-select" id="attLiveVoice"><option value="">All Voice Parts</option><option>Soprano</option><option>Mezzo-Soprano</option><option>Alto</option><option>Tenor</option><option>Baritone</option><option>Bass</option><option>Conductor</option><option>Pianist / Accompanist</option></select>
+        </div>
+        <div class="att-table-wrap"><table class="att-table"><thead><tr><th>ID</th><th>Name</th><th>Voice</th><th>Status</th><th>Time</th><th>Override</th></tr></thead>
+        <tbody id="attLiveBody"><tr><td colspan="6" class="att-empty-row">Select a session above.</td></tr></tbody></table></div>
+      </div>
+
+      <!-- REPORTS -->
+      <div class="att-panel" id="atReports">
+        <div class="att-panel-topbar">
+          <h4>Attendance Reports</h4>
+          <button class="btn btn-o btn-sm" id="attExportBtn">Export CSV</button>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+          <input class="att-search" type="text" id="attRptSrch" placeholder="Search…"/>
+          <select class="att-select" id="attRptVoice"><option value="">All Voice Parts</option><option>Soprano</option><option>Mezzo-Soprano</option><option>Alto</option><option>Tenor</option><option>Baritone</option><option>Bass</option></select>
+          <select class="att-select" id="attRptStatus"><option value="">All</option><option value="active">Active (≥70%)</option><option value="risk">At Risk</option><option value="inactive">Inactive</option></select>
+        </div>
+        <div class="att-table-wrap"><table class="att-table"><thead><tr><th>ID</th><th>Name</th><th>Voice</th><th>Present</th><th>Excused</th><th>Absent</th><th>%</th><th>Status</th></tr></thead>
+        <tbody id="attRptBody"><tr><td colspan="8" class="att-empty-row">No data yet.</td></tr></tbody></table></div>
+      </div>
+
+      <!-- MEMBERS -->
+      <div class="att-panel" id="atMembers">
+        <div class="att-panel-topbar">
+          <h4>Manage Members</h4>
+          <button class="btn btn-p btn-sm" id="attAddMemBtn">+ Add Member</button>
+        </div>
+        <div class="att-inline-form" id="attAddMemForm" style="display:none">
+          <div class="att-form-row2">
+            <div class="fg"><label>Full Name</label><input type="text" id="mNameI" placeholder="Full name"/></div>
+            <div class="fg"><label>Member ID <small>(auto)</small></label><input type="text" id="mIdI" readonly placeholder="Generated automatically"/></div>
+          </div>
+          <div class="att-form-row2">
+            <div class="fg"><label>Voice Part</label><select id="mVoiceI"><option>Soprano</option><option>Mezzo-Soprano</option><option>Alto</option><option>Tenor</option><option>Baritone</option><option>Bass</option><option>Conductor</option><option>Pianist / Accompanist</option></select></div>
+            <div class="fg"><label>Role</label><select id="mRoleI"><option>Chorister</option><option>Section Leader</option><option>Assistant Director</option><option>Musical Director</option><option>Accompanist</option><option>Secretary</option><option>Treasurer</option><option>Publicity Officer</option></select></div>
+          </div>
+          <div class="att-form-row2">
+            <div class="fg"><label>Phone</label><input type="tel" id="mPhoneI" placeholder="0XX XXX XXXX"/></div>
+            <div class="fg"><label>Year Joined</label><input type="number" id="mYearI" placeholder="e.g. 2024" min="2000" max="2030"/></div>
+          </div>
+          <div class="fg"><label>Temporary PIN (4–6 digits)</label><input type="text" id="mPinI" placeholder="Member sets permanent PIN on first login" maxlength="6"/></div>
+          <div class="att-error" id="attMemErr"></div>
+          <div style="display:flex;gap:10px;margin-top:4px">
+            <button class="btn btn-p btn-sm" id="attSaveMem">Save Member</button>
+            <button class="btn btn-o btn-sm" id="attCancelMem">Cancel</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+          <input class="att-search" type="text" id="attMemSrch" placeholder="Search…"/>
+          <select class="att-select" id="attMemVoice"><option value="">All Voice Parts</option><option>Soprano</option><option>Mezzo-Soprano</option><option>Alto</option><option>Tenor</option><option>Baritone</option><option>Bass</option></select>
+        </div>
+        <div class="att-table-wrap"><table class="att-table"><thead><tr><th>ID</th><th>Name</th><th>Voice</th><th>Role</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="attMemBody"><tr><td colspan="7" class="att-empty-row">No members yet.</td></tr></tbody></table></div>
+      </div>
+
+    </div><!-- /attViewAdmin -->
+
+    <!-- Excuse modal -->
+    <div class="att-modal-bg" id="attExcuseModal">
+      <div class="att-modal">
+        <div class="att-modal-head"><h4>Submit Apology / Excuse</h4><button class="att-modal-x" id="attExcuseClose">✕</button></div>
+        <div class="att-modal-body">
+          <div class="fg"><label>Reason</label>
+            <select id="attExcuseReason"><option value="">Select reason</option><option>Illness / Medical</option><option>Work / School</option><option>Family Emergency</option><option>Travel</option><option>Other</option></select>
+          </div>
+          <div class="fg"><label>Details (optional)</label><textarea id="attExcuseDetails" rows="3" placeholder="Any additional information…"></textarea></div>
+          <div class="att-error" id="attExcuseErr"></div>
+        </div>
+        <div class="att-modal-foot">
+          <button class="btn btn-o btn-sm" id="attExcuseCancel">Cancel</button>
+          <button class="btn btn-p btn-sm" id="attExcuseSubmit">Submit</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
