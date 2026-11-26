@@ -1123,3 +1123,12 @@ button{font-family:var(--fb);cursor:pointer}
   .ed-tags   { justify-content: center; }
   .rule-l    { margin: 14px auto 16px !important; }
 }
+
+.ed-nickname {
+  font-family: var(--fd);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--crimson);
+  margin-bottom: 10px;
+  letter-spacing: .02em;
+}
