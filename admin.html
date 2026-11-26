@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>Admin Portal | Soh NOTED Ensemble</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/admin.css"/>
+</head>
+<body>
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div id="adminLogin" class="adm-login-screen">
+  <div class="adm-login-card">
+    <img src="images/logo.png" alt="Soh NOTED Ensemble" class="adm-login-logo" onerror="this.style.display='none'"/>
+    <h1>Admin Portal</h1>
+    <p class="adm-login-sub">Soh NOTED Ensemble — Director's Dashboard</p>
+    <form id="adminLoginForm" novalidate autocomplete="off">
+      <div class="adm-fg">
+        <label for="adminUser">Admin ID</label>
+        <input type="text" id="adminUser" placeholder="SNE-ADMIN-0001" autocomplete="off" required/>
+      </div>
+      <div class="adm-fg" style="position:relative">
+        <label for="adminPass">Password / PIN</label>
+        <input type="password" id="adminPass" placeholder="Your admin PIN" maxlength="20" required/>
+        <button type="button" id="adminPassToggle" class="adm-eye-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="adm-error" id="adminLoginErr"></div>
+      <button type="submit" class="adm-btn adm-btn-p">Sign In to Dashboard</button>
+    </form>
+    <a href="index.html" class="adm-back-link">← Back to main website</a>
+  </div>
+</div>
+
+<!-- ══ ADMIN DASHBOARD ══ -->
+<div id="adminDash" class="adm-dash" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="adm-sidebar" id="adminSidebar">
+    <div class="adm-sidebar-brand">
+      <img src="images/logo.png" alt="SNE" onerror="this.style.display='none'"/>
+      <div>
+        <span class="adm-brand-name">Soh NOTED</span>
+        <span class="adm-brand-tag">Admin Portal</span>
+      </div>
+    </div>
+
+    <nav class="adm-nav">
+      <button class="adm-nav-item active" data-page="pageOverview">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Overview
+      </button>
+      <button class="adm-nav-item" data-page="pageTickets">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2M13 17v2M13 11v2"/></svg>
+        Ticket Orders
+      </button>
+      <button class="adm-nav-item" data-page="pageConcerts">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        Concerts
+      </button>
+      <button class="adm-nav-item" data-page="pageMembers">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Choir Members
+      </button>
+      <button class="adm-nav-item" data-page="pageAttendance">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Attendance
+      </button>
+      <button class="adm-nav-item" data-page="pageMessages">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Messages
+        <span class="adm-badge" id="msgBadge" style="display:none">0</span>
+      </button>
+      <button class="adm-nav-item" data-page="pageSettings">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </button>
+    </nav>
+
+    <button class="adm-logout-btn" id="adminLogout">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+      Sign Out
+    </button>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="adm-main">
+    <!-- Top bar -->
+    <div class="adm-topbar">
+      <button class="adm-menu-tog" id="adminMenuTog">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
+      </button>
+      <div class="adm-topbar-title" id="pageTitle">Overview</div>
+      <div class="adm-topbar-right">
+        <span class="adm-topbar-user">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Frederick Owusu Boakye
+        </span>
+        <a href="index.html" class="adm-btn adm-btn-sm adm-btn-o" target="_blank">View Site</a>
+      </div>
+    </div>
+
+    <!-- ══ PAGE: OVERVIEW ══ -->
+    <div class="adm-page active" id="pageOverview">
+      <div class="adm-page-header">
+        <h2>Welcome back, <span style="color:var(--adm-crimson)">Frederick</span></h2>
+        <p>Here's what's happening with Soh NOTED Ensemble today.</p>
+      </div>
+
+      <div class="adm-kpi-grid">
+        <div class="adm-kpi adm-kpi-blue">
+          <div class="adm-kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2M13 17v2M13 11v2"/></svg></div>
+          <div><span class="adm-kpi-n" id="kpiTickets">0</span><span class="adm-kpi-l">Ticket Orders</span></div>
+        </div>
+        <div class="adm-kpi adm-kpi-green">
+          <div class="adm-kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="1" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div><span class="adm-kpi-n" id="kpiRevenue">GHS 0</span><span class="adm-kpi-l">Total Revenue</span></div>
+        </div>
+        <div class="adm-kpi adm-kpi-crimson">
+          <div class="adm-kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div><span class="adm-kpi-n" id="kpiMembers">0</span><span class="adm-kpi-l">Choir Members</span></div>
+        </div>
+        <div class="adm-kpi adm-kpi-amber">
+          <div class="adm-kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div><span class="adm-kpi-n" id="kpiMessages">0</span><span class="adm-kpi-l">New Messages</span></div>
+        </div>
+        <div class="adm-kpi adm-kpi-blue">
+          <div class="adm-kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <div><span class="adm-kpi-n" id="kpiActive">0</span><span class="adm-kpi-l">Active Members</span></div>
+        </div>
+        <div class="adm-kpi adm-kpi-crimson">
+          <div class="adm-kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+          <div><span class="adm-kpi-n" id="kpiConcerts">3</span><span class="adm-kpi-l">Concerts</span></div>
+        </div>
+      </div>
+
+      <!-- Recent orders + recent messages side by side -->
+      <div class="adm-overview-grid">
+        <div class="adm-card">
+          <div class="adm-card-head">
+            <h4>Recent Ticket Orders</h4>
+            <button class="adm-link-btn" onclick="goPage('pageTickets')">View all</button>
+          </div>
+          <div class="adm-table-wrap">
+            <table class="adm-table"><thead><tr><th>Ref</th><th>Name</th><th>Concert</th><th>Tickets</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody id="ovRecentOrders"><tr><td colspan="6" class="adm-empty">No orders yet.</td></tr></tbody></table>
+          </div>
+        </div>
+        <div class="adm-card">
+          <div class="adm-card-head">
+            <h4>Recent Messages</h4>
+            <button class="adm-link-btn" onclick="goPage('pageMessages')">View all</button>
+          </div>
+          <div id="ovRecentMessages">
+            <p class="adm-empty" style="padding:20px">No messages yet.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PAGE: TICKETS ══ -->
+    <div class="adm-page" id="pageTickets">
+      <div class="adm-page-header">
+        <h2>Ticket Orders</h2>
+        <p>All ticket purchases made through the website.</p>
+      </div>
+      <div class="adm-toolbar">
+        <input class="adm-search" type="text" id="ticketSearch" placeholder="Search by name, ref, or concert…"/>
+        <select class="adm-select" id="ticketConcertFilter">
+          <option value="">All Concerts</option>
+          <option>Christmas Carol Concert 2026</option>
+          <option>Easter Cantata 2027</option>
+          <option>Founders' Night Gala</option>
+        </select>
+        <select class="adm-select" id="ticketStatusFilter">
+          <option value="">All Status</option>
+          <option value="paid">Paid</option>
+          <option value="pending">Pending</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+        <button class="adm-btn adm-btn-o adm-btn-sm" id="exportTicketsBtn">Export CSV</button>
+      </div>
+      <div class="adm-card">
+        <div class="adm-table-wrap">
+          <table class="adm-table" id="ticketsTable">
+            <thead><tr><th>Ref</th><th>Date</th><th>Name</th><th>Email</th><th>Phone</th><th>Concert</th><th>Type</th><th>Qty</th><th>Amount</th><th>Payment</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="ticketsBody"><tr><td colspan="12" class="adm-empty">No ticket orders yet. Orders from the website will appear here.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Add manual order -->
+      <div class="adm-card" style="margin-top:20px">
+        <div class="adm-card-head">
+          <h4>Add Manual Order</h4>
+          <button class="adm-link-btn" id="toggleManualOrder">+ Add</button>
+        </div>
+        <div id="manualOrderForm" style="display:none;padding:20px">
+          <div class="adm-form-row2">
+            <div class="adm-fg"><label>Customer Name</label><input type="text" id="moName" placeholder="Full name"/></div>
+            <div class="adm-fg"><label>Phone</label><input type="tel" id="moPhone" placeholder="0XX XXX XXXX"/></div>
+          </div>
+          <div class="adm-form-row2">
+            <div class="adm-fg"><label>Concert</label>
+              <select id="moConcert">
+                <option>Christmas Carol Concert 2026</option>
+                <option>Easter Cantata 2027</option>
+                <option>Founders' Night Gala</option>
+              </select>
+            </div>
+            <div class="adm-fg"><label>Ticket Type</label>
+              <select id="moType"><option value="student">Student</option><option value="regular">Regular</option><option value="vip">VIP</option></select>
+            </div>
+          </div>
+          <div class="adm-form-row2">
+            <div class="adm-fg"><label>Quantity</label><input type="number" id="moQty" value="1" min="1" max="20"/></div>
+            <div class="adm-fg"><label>Payment Method</label>
+              <select id="moMethod"><option value="momo">Mobile Money</option><option value="paystack">Paystack</option><option value="cash">Cash</option></select>
+            </div>
+          </div>
+          <div class="adm-fg"><label>Notes (optional)</label><input type="text" id="moNotes" placeholder="Any notes…"/></div>
+          <div style="display:flex;gap:10px;margin-top:8px">
+            <button class="adm-btn adm-btn-p adm-btn-sm" id="saveManualOrder">Save Order</button>
+            <button class="adm-btn adm-btn-o adm-btn-sm" id="cancelManualOrder">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PAGE: CONCERTS ══ -->
+    <div class="adm-page" id="pageConcerts">
+      <div class="adm-page-header">
+        <h2>Concerts</h2>
+        <p>Manage upcoming and past concerts.</p>
+      </div>
+      <div class="adm-concerts-grid" id="adminConcertsGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- ══ PAGE: MEMBERS ══ -->
+    <div class="adm-page" id="pageMembers">
+      <div class="adm-page-header">
+        <h2>Choir Members</h2>
+        <p>Manage all registered members of Soh NOTED Ensemble.</p>
+      </div>
+      <div class="adm-toolbar">
+        <input class="adm-search" type="text" id="memberSearch" placeholder="Search name or ID…"/>
+        <select class="adm-select" id="memberVoiceFilter">
+          <option value="">All Voice Parts</option>
+          <option>Soprano</option><option>Mezzo-Soprano</option><option>Alto</option>
+          <option>Tenor</option><option>Baritone</option><option>Bass</option>
+        </select>
+        <select class="adm-select" id="memberStatusFilter">
+          <option value="">All Status</option>
+          <option value="active">Active</option><option value="inactive">Inactive</option>
+        </select>
+        <button class="adm-btn adm-btn-p adm-btn-sm" id="addMemberBtn">+ Add Member</button>
+      </div>
+
+      <div class="adm-card" id="addMemberFormWrap" style="display:none">
+        <div class="adm-card-head"><h4>Add New Member</h4></div>
+        <div style="padding:20px">
+          <div class="adm-form-row2">
+            <div class="adm-fg"><label>Full Name</label><input type="text" id="newMName" placeholder="Full name"/></div>
+            <div class="adm-fg"><label>Member ID <small>(auto)</small></label><input type="text" id="newMId" readonly/></div>
+          </div>
+          <div class="adm-form-row2">
+            <div class="adm-fg"><label>Voice Part</label>
+              <select id="newMVoice"><option>Soprano</option><option>Mezzo-Soprano</option><option>Alto</option><option>Tenor</option><option>Baritone</option><option>Bass</option><option>Conductor</option><option>Pianist / Accompanist</option></select>
+            </div>
+            <div class="adm-fg"><label>Role</label>
+              <select id="newMRole"><option>Chorister</option><option>Section Leader</option><option>Assistant Director</option><option>Musical Director</option><option>Accompanist</option><option>Secretary</option><option>Treasurer</option><option>Publicity Officer</option></select>
+            </div>
+          </div>
+          <div class="adm-form-row2">
+            <div class="adm-fg"><label>Phone</label><input type="tel" id="newMPhone" placeholder="0XX XXX XXXX"/></div>
+            <div class="adm-fg"><label>Year Joined</label><input type="number" id="newMYear" placeholder="2024" min="2000" max="2030"/></div>
+          </div>
+          <div class="adm-fg"><label>Temporary PIN</label><input type="text" id="newMPin" placeholder="4–6 digits" maxlength="6"/></div>
+          <div class="adm-error" id="newMemberErr"></div>
+          <div style="display:flex;gap:10px;margin-top:8px">
+            <button class="adm-btn adm-btn-p adm-btn-sm" id="saveNewMember">Save Member</button>
+            <button class="adm-btn adm-btn-o adm-btn-sm" id="cancelNewMember">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="adm-card">
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead><tr><th>ID</th><th>Name</th><th>Voice</th><th>Role</th><th>Phone</th><th>Joined</th><th>Attendance %</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="membersBody"><tr><td colspan="9" class="adm-empty">No members yet. Add your first member above.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PAGE: ATTENDANCE ══ -->
+    <div class="adm-page" id="pageAttendance">
+      <div class="adm-page-header">
+        <h2>Attendance</h2>
+        <p>Create rehearsal sessions, monitor who is present, and view reports.</p>
+      </div>
+
+      <div class="adm-att-tabs">
+        <button class="adm-att-tab active" data-atab="atSessions">Sessions</button>
+        <button class="adm-att-tab" data-atab="atLive">Live Check-in</button>
+        <button class="adm-att-tab" data-atab="atReports">Reports</button>
+      </div>
+
+      <!-- Sessions -->
+      <div class="adm-att-panel active" id="atSessions">
+        <div class="adm-toolbar">
+          <h4 style="font-family:var(--adm-fd);color:var(--adm-navy)">All Sessions</h4>
+          <button class="adm-btn adm-btn-p adm-btn-sm" id="newSesBtn">+ New Session</button>
+        </div>
+        <div class="adm-card" id="newSesFormCard" style="display:none">
+          <div class="adm-card-head"><h4>Create Session</h4></div>
+          <div style="padding:20px">
+            <div class="adm-form-row2">
+              <div class="adm-fg"><label>Title</label><input type="text" id="sesTitleA" placeholder="e.g. Weekly Rehearsal"/></div>
+              <div class="adm-fg"><label>Type</label><select id="sesTypeA"><option>Rehearsal</option><option>Concert</option><option>Church Program</option><option>Meeting</option><option>Other</option></select></div>
+            </div>
+            <div class="adm-form-row3">
+              <div class="adm-fg"><label>Date</label><input type="date" id="sesDateA"/></div>
+              <div class="adm-fg"><label>Start</label><input type="time" id="sesStartA"/></div>
+              <div class="adm-fg"><label>End</label><input type="time" id="sesEndA"/></div>
+            </div>
+            <div class="adm-fg"><label>Venue</label><input type="text" id="sesVenueA" placeholder="Kumasi, Ashanti Region"/></div>
+            <div class="adm-form-row2">
+              <div class="adm-fg"><label>Open check-in (mins before start)</label><input type="number" id="sesBeforeA" value="30"/></div>
+              <div class="adm-fg"><label>Close check-in (mins after start)</label><input type="number" id="sesAfterA" value="60"/></div>
+            </div>
+            <div class="adm-fg">
+              <label>Session Code (announce at venue only)</label>
+              <div class="adm-code-row">
+                <span class="adm-big-code" id="sesCodePreview">——</span>
+                <button type="button" class="adm-link-btn" id="regenSesCode">Regenerate</button>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:8px">
+              <button class="adm-btn adm-btn-p adm-btn-sm" id="saveSesA">Save Session</button>
+              <button class="adm-btn adm-btn-o adm-btn-sm" id="cancelSesA">Cancel</button>
+            </div>
+          </div>
+        </div>
+        <div class="adm-card">
+          <div class="adm-table-wrap">
+            <table class="adm-table"><thead><tr><th>Date</th><th>Title</th><th>Type</th><th>Time</th><th>Code</th><th>Present</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="sesBodyA"><tr><td colspan="8" class="adm-empty">No sessions created yet.</td></tr></tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live -->
+      <div class="adm-att-panel" id="atLive">
+        <div class="adm-toolbar">
+          <h4 style="font-family:var(--adm-fd);color:var(--adm-navy)">Live Attendance</h4>
+          <select class="adm-select" id="liveSesSel"><option value="">Select session</option></select>
+        </div>
+        <div class="adm-live-banner" id="admLiveBanner" style="display:none">
+          <div><p class="adm-live-lbl">Session Code</p><p class="adm-live-code" id="admLiveCode">——</p></div>
+          <div><p class="adm-live-lbl">Check-in Window</p><p class="adm-live-win" id="admLiveWin">—</p></div>
+          <div class="adm-live-pills">
+            <span class="adm-pill adm-pill-green" id="admLivePres">0 Present</span>
+            <span class="adm-pill adm-pill-amber" id="admLiveExc">0 Excused</span>
+            <span class="adm-pill adm-pill-red" id="admLiveAbs">0 Absent</span>
+          </div>
+        </div>
+        <div class="adm-toolbar" style="margin-top:0">
+          <input class="adm-search" type="text" id="liveSrchA" placeholder="Search…"/>
+          <select class="adm-select" id="liveVoiceA"><option value="">All Voice Parts</option><option>Soprano</option><option>Mezzo-Soprano</option><option>Alto</option><option>Tenor</option><option>Baritone</option><option>Bass</option></select>
+        </div>
+        <div class="adm-card"><div class="adm-table-wrap">
+          <table class="adm-table"><thead><tr><th>ID</th><th>Name</th><th>Voice</th><th>Status</th><th>Time</th><th>Override</th></tr></thead>
+          <tbody id="liveBodyA"><tr><td colspan="6" class="adm-empty">Select a session above.</td></tr></tbody></table>
+        </div></div>
+      </div>
+
+      <!-- Reports -->
+      <div class="adm-att-panel" id="atReports">
+        <div class="adm-toolbar">
+          <h4 style="font-family:var(--adm-fd);color:var(--adm-navy)">Attendance Reports</h4>
+          <button class="adm-btn adm-btn-o adm-btn-sm" id="exportAttBtn">Export CSV</button>
+        </div>
+        <div class="adm-toolbar" style="margin-top:0">
+          <input class="adm-search" type="text" id="rptSrchA" placeholder="Search…"/>
+          <select class="adm-select" id="rptVoiceA"><option value="">All</option><option>Soprano</option><option>Alto</option><option>Tenor</option><option>Bass</option></select>
+          <select class="adm-select" id="rptStatusA"><option value="">All</option><option value="active">Active (≥70%)</option><option value="risk">At Risk</option><option value="inactive">Inactive</option></select>
+        </div>
+        <div class="adm-card"><div class="adm-table-wrap">
+          <table class="adm-table"><thead><tr><th>ID</th><th>Name</th><th>Voice</th><th>Present</th><th>Excused</th><th>Absent</th><th>%</th><th>Status</th></tr></thead>
+          <tbody id="rptBodyA"><tr><td colspan="8" class="adm-empty">No data yet.</td></tr></tbody></table>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- ══ PAGE: MESSAGES ══ -->
+    <div class="adm-page" id="pageMessages">
+      <div class="adm-page-header">
+        <h2>Contact Messages</h2>
+        <p>Messages sent through the website contact form.</p>
+      </div>
+      <div class="adm-toolbar">
+        <input class="adm-search" type="text" id="msgSearch" placeholder="Search messages…"/>
+        <select class="adm-select" id="msgSubjectFilter">
+          <option value="">All Subjects</option>
+          <option value="tickets">Ticket Enquiry</option>
+          <option value="booking">Book Us</option>
+          <option value="audition">Audition</option>
+          <option value="media">Media / Press</option>
+          <option value="other">Other</option>
+        </select>
+        <select class="adm-select" id="msgReadFilter">
+          <option value="">All</option>
+          <option value="unread">Unread</option>
+          <option value="read">Read</option>
+        </select>
+      </div>
+      <div id="msgList">
+        <p class="adm-empty" style="padding:40px;text-align:center">No messages yet. Messages from the contact form will appear here.</p>
+      </div>
+    </div>
+
+    <!-- ══ PAGE: SETTINGS ══ -->
+    <div class="adm-page" id="pageSettings">
+      <div class="adm-page-header">
+        <h2>Settings</h2>
+        <p>Manage your admin account and portal preferences.</p>
+      </div>
+      <div class="adm-settings-grid">
+        <div class="adm-card">
+          <div class="adm-card-head"><h4>Change Admin PIN</h4></div>
+          <div style="padding:20px">
+            <div class="adm-fg"><label>Current PIN</label><input type="password" id="currentPin" placeholder="Current PIN"/></div>
+            <div class="adm-fg"><label>New PIN</label><input type="password" id="newPin" placeholder="New PIN (4–20 chars)"/></div>
+            <div class="adm-fg"><label>Confirm New PIN</label><input type="password" id="confirmPin" placeholder="Repeat new PIN"/></div>
+            <div class="adm-error" id="pinChangeErr"></div>
+            <button class="adm-btn adm-btn-p adm-btn-sm" id="savePinBtn">Update PIN</button>
+          </div>
+        </div>
+        <div class="adm-card">
+          <div class="adm-card-head"><h4>Concert Ticket Prices</h4></div>
+          <div style="padding:20px">
+            <p style="font-size:.86rem;color:var(--adm-t600);margin-bottom:16px">Update the prices shown on concert cards. Changes save instantly.</p>
+            <div id="priceSettings"><!-- filled by JS --></div>
+            <button class="adm-btn adm-btn-p adm-btn-sm" id="savePricesBtn" style="margin-top:12px">Save Prices</button>
+          </div>
+        </div>
+        <div class="adm-card">
+          <div class="adm-card-head"><h4>About the Portal</h4></div>
+          <div style="padding:20px;font-size:.86rem;color:var(--adm-t600);line-height:1.8">
+            <p><strong>Admin ID:</strong> SNE-ADMIN-0001</p>
+            <p><strong>Name:</strong> Frederick Owusu Boakye</p>
+            <p><strong>Role:</strong> Executive Director</p>
+            <p style="margin-top:12px">All data is stored securely in this browser. When you connect a backend server, the data will sync automatically.</p>
+            <p style="margin-top:12px"><a href="index.html" style="color:var(--adm-navy);font-weight:600">← Go to main website</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Message detail modal -->
+<div class="adm-modal-bg" id="msgModal">
+  <div class="adm-modal">
+    <div class="adm-modal-head"><h4 id="msgModalSubject">Message</h4><button class="adm-modal-x" id="msgModalClose">✕</button></div>
+    <div class="adm-modal-body" id="msgModalBody"></div>
+    <div class="adm-modal-foot">
+      <button class="adm-btn adm-btn-o adm-btn-sm" id="msgMarkRead">Mark as Read</button>
+      <button class="adm-btn adm-btn-p adm-btn-sm" id="msgReply">Reply by Email</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="adm-toast" id="admToast"></div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

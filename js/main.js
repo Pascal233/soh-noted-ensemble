@@ -173,6 +173,8 @@ document.getElementById('ticketForm')?.addEventListener('submit', e => {
     if (typeof PaystackPop === 'undefined') { showToast('Paystack is loading, please try again.', 'error'); return; }
     runPaystack(email, total, name, phone, qty);
   } else if (method === 'momo' || method === 'ussd') {
+    // Save pending order to admin
+    saveTicketOrder(name, email, phone, type, qty, total, method, 'pending');
     closeTicketModal();
     openMomoModal(name, total, activeConcert, qty, type);
   }
@@ -196,7 +198,11 @@ function runPaystack(email, amount, name, phone, qty) {
         { display_name:'Qty',     variable_name:'qty',     value: qty }
       ]
     },
-    callback: r => { closeTicketModal(); showToast('Payment successful! Ref: ' + r.reference, 'success'); },
+    callback: r => {
+      closeTicketModal();
+      saveTicketOrder(email, email, phone, qty, total, 'paystack', 'paid', r.reference);
+      showToast('Payment successful! Ref: ' + r.reference, 'success');
+    },
     onClose:  ()  => showToast('Payment cancelled.', 'error')
   });
   handler.openIframe();
@@ -1054,3 +1060,43 @@ document.getElementById('attendance')?.addEventListener('click',()=>{
 });
 
 })(); // end IIFE
+
+// ══════════════════════════════════════════════
+// SAVE DATA TO ADMIN STORAGE
+// ══════════════════════════════════════════════
+
+function saveTicketOrder(name, email, phone, type, qty, amount, method, status, ref) {
+  const tickets = JSON.parse(localStorage.getItem('sne_tickets') || '[]');
+  tickets.push({
+    ref:     ref || 'SNE-' + Date.now(),
+    name:    name,
+    email:   email,
+    phone:   phone,
+    concert: activeConcert ? activeConcert.name : '—',
+    type:    type,
+    qty:     qty,
+    amount:  amount,
+    method:  method,
+    status:  status,
+    time:    new Date().toISOString()
+  });
+  localStorage.setItem('sne_tickets', JSON.stringify(tickets));
+}
+
+// Save contact form message to admin
+document.getElementById('contactForm')?.addEventListener('submit', function saveMsg() {
+  const name    = document.getElementById('cName')?.value.trim();
+  const email   = document.getElementById('cEmail')?.value.trim();
+  const phone   = document.getElementById('cPhone')?.value.trim();
+  const subject = document.getElementById('cSubject')?.value;
+  const message = document.getElementById('cMessage')?.value.trim();
+  if (!name || !message) return;
+  const msgs = JSON.parse(localStorage.getItem('sne_msgs') || '[]');
+  msgs.push({
+    id:      'MSG-' + Date.now(),
+    name, email, phone, subject, message,
+    read:    false,
+    time:    new Date().toISOString()
+  });
+  localStorage.setItem('sne_msgs', JSON.stringify(msgs));
+}, true); // capture phase so it fires before the existing submit handler
