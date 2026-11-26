@@ -37,6 +37,7 @@
       <li><a href="#concerts">Concerts</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#team">Team</a></li>
+      <li><a href="#members">Members</a></li>
       <li><a href="#testimonials">Reviews</a></li>
       <li><a href="#contact">Contact</a></li>
       <li>
@@ -418,6 +419,163 @@
 </section>
 
 <!-- ╔══════════════════════════════╗
+     ║        MEMBER PORTAL         ║
+     ╚══════════════════════════════╝ -->
+<section id="members" class="sp member-sec" aria-labelledby="member-title">
+  <div class="container">
+    <div class="sh">
+      <span class="overline">Member Portal</span>
+      <h2 class="section-title" id="member-title">Get Your Member ID</h2>
+      <div class="rule"></div>
+      <p class="section-sub" style="margin-top:14px">Every member of Soh NOTED Ensemble receives a unique member ID. Fill in your details below to generate and save your digital member card.</p>
+    </div>
+
+    <div class="member-grid">
+
+      <!-- Left — Form -->
+      <div class="member-form-box fu">
+        <h3>Generate Your ID Card</h3>
+        <p class="mf-desc">Enter your details exactly as registered with the ensemble. Your unique ID will be generated instantly.</p>
+
+        <form id="memberForm" novalidate autocomplete="off">
+          <div class="fg">
+            <label for="mFullName">Full Name</label>
+            <input type="text" id="mFullName" placeholder="e.g. Kwame Asante" required/>
+          </div>
+          <div class="frow">
+            <div class="fg">
+              <label for="mVoicePart">Voice Part</label>
+              <select id="mVoicePart" required>
+                <option value="">Select voice part</option>
+                <option value="Soprano">Soprano</option>
+                <option value="Mezzo-Soprano">Mezzo-Soprano</option>
+                <option value="Alto">Alto</option>
+                <option value="Tenor">Tenor</option>
+                <option value="Baritone">Baritone</option>
+                <option value="Bass">Bass</option>
+                <option value="Conductor">Conductor</option>
+                <option value="Pianist">Pianist / Accompanist</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label for="mRole">Role</label>
+              <select id="mRole" required>
+                <option value="">Select role</option>
+                <option value="Chorister">Chorister</option>
+                <option value="Section Leader">Section Leader</option>
+                <option value="Assistant Director">Assistant Director</option>
+                <option value="Musical Director">Musical Director</option>
+                <option value="Accompanist">Accompanist</option>
+                <option value="Secretary">Secretary</option>
+                <option value="Treasurer">Treasurer</option>
+                <option value="Publicity">Publicity Officer</option>
+              </select>
+            </div>
+          </div>
+          <div class="frow">
+            <div class="fg">
+              <label for="mPhone">Phone Number</label>
+              <input type="tel" id="mPhone" placeholder="0XX XXX XXXX" required/>
+            </div>
+            <div class="fg">
+              <label for="mJoinYear">Year Joined</label>
+              <select id="mJoinYear" required>
+                <option value="">Select year</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+                <option value="2020">2020</option>
+                <option value="2019">2019</option>
+                <option value="2018">2018</option>
+                <option value="2017">2017</option>
+                <option value="2016">2016</option>
+                <option value="2015">2015</option>
+              </select>
+            </div>
+          </div>
+          <div class="fg">
+            <label for="mEmail">Email Address (optional)</label>
+            <input type="email" id="mEmail" placeholder="you@email.com"/>
+          </div>
+
+          <button type="submit" class="btn btn-p" style="width:100%;justify-content:center;margin-top:4px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            Generate My Member ID
+          </button>
+        </form>
+      </div>
+
+      <!-- Right — ID Card Preview -->
+      <div class="member-card-wrap fu">
+        <p class="mc-hint">Your digital ID card will appear here</p>
+
+        <div class="id-card" id="idCard">
+          <!-- Card Header -->
+          <div class="idc-header">
+            <div class="idc-logo-wrap">
+              <img src="images/logo.png" alt="Soh NOTED Ensemble" class="idc-logo" onerror="this.style.display='none'"/>
+            </div>
+            <div class="idc-org">
+              <span class="idc-org-name">Soh NOTED Ensemble</span>
+              <span class="idc-org-tag">Noted Well &nbsp;·&nbsp; Kumasi, Ghana</span>
+            </div>
+          </div>
+
+          <!-- Card Body -->
+          <div class="idc-body">
+            <div class="idc-avatar" id="idcAvatar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span id="idcInitials" class="idc-initials-text"></span>
+            </div>
+            <div class="idc-info">
+              <p class="idc-name" id="idcName">— Member Name —</p>
+              <p class="idc-role" id="idcRole">Role &nbsp;·&nbsp; Voice Part</p>
+              <div class="idc-id-row">
+                <span class="idc-id-label">Member ID</span>
+                <span class="idc-id-val" id="idcID">SNE-0000-000</span>
+              </div>
+              <div class="idc-id-row">
+                <span class="idc-id-label">Joined</span>
+                <span class="idc-id-val" id="idcJoin">—</span>
+              </div>
+              <div class="idc-id-row" id="idcPhoneRow" style="display:none">
+                <span class="idc-id-label">Phone</span>
+                <span class="idc-id-val" id="idcPhone">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Footer -->
+          <div class="idc-footer">
+            <div class="idc-barcode" id="idcBarcode" aria-label="Member barcode"></div>
+            <span class="idc-valid">Valid Member · <span id="idcYear">2026</span></span>
+          </div>
+        </div>
+
+        <!-- Action buttons (shown after generation) -->
+        <div class="mc-actions" id="mcActions" style="display:none">
+          <button class="btn btn-p btn-sm" id="btnSaveCard">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            Save / Screenshot
+          </button>
+          <button class="btn btn-o btn-sm" id="btnResetCard">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.9"/></svg>
+            Generate New
+          </button>
+        </div>
+
+        <p class="mc-note" id="mcNote" style="display:none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+          Take a screenshot or tap "Save" to keep your ID card. Your ID is unique to you — please keep it safe.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════╗
      ║        TESTIMONIALS          ║
      ╚══════════════════════════════╝ -->
 <section id="testimonials" class="sp testi-sec" aria-labelledby="testi-title">
@@ -551,7 +709,7 @@
           <a href="https://www.tiktok.com/@soh.noted.ensembl?_r=1&_t=ZS-9BhYXX30Jh2" class="soc" aria-label="TikTok" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.26 8.26 0 0 0 4.83 1.55V6.79a4.85 4.85 0 0 1-1.06-.1z"/></svg></a>
         </div>
       </div>
-      <div class="fc"><h4>Navigate</h4><ul><li><a href="#home">Home</a></li><li><a href="#what-we-do">What We Do</a></li><li><a href="#about">About Us</a></li><li><a href="#concerts">Concerts</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#team">Our Team</a></li><li><a href="#testimonials">Reviews</a></li></ul></div>
+      <div class="fc"><h4>Navigate</h4><ul><li><a href="#home">Home</a></li><li><a href="#what-we-do">What We Do</a></li><li><a href="#about">About Us</a></li><li><a href="#concerts">Concerts</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#team">Our Team</a></li><li><a href="#members">Member Portal</a></li><li><a href="#testimonials">Reviews</a></li></ul></div>
       <div class="fc"><h4>Concerts</h4><ul><li><a href="#concerts">Christmas Concert 2026</a></li><li><a href="#concerts">Easter Cantata 2027</a></li><li><a href="#concerts">Founders' Night Gala 2027</a></li></ul></div>
       <div class="fc"><h4>Contact</h4><ul><li><a href="tel:+233548580708">0548 580 708</a></li><li><a href="tel:+233556617242">0556 617 242</a></li><li><a href="mailto:sohnoted@gmail.com">sohnoted@gmail.com</a></li><li><a href="#contact">Kumasi, Ghana</a></li><li><a href="#contact">Audition / Join</a></li></ul></div>
     </div>

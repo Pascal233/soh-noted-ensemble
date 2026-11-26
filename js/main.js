@@ -263,3 +263,130 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeTicketModal(); closeMomoModal(); } });
+
+// ══════════════════════════════════════════════
+// MEMBER ID PORTAL
+// ══════════════════════════════════════════════
+
+/**
+ * Generates a deterministic but unique-looking member ID.
+ * Format: SNE-YYYY-XXXX  (e.g. SNE-2024-4821)
+ * The numeric part is derived from the member's name + phone
+ * so the same person always gets the same ID.
+ */
+function generateMemberID(name, phone, year) {
+  const seed = (name + phone + year).toLowerCase().replace(/\s/g, '');
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+    hash |= 0;
+  }
+  const num = Math.abs(hash) % 9000 + 1000; // always 4 digits 1000–9999
+  return `SNE-${year}-${num}`;
+}
+
+/** Build the barcode visual (random-looking bars seeded from the ID) */
+function buildBarcode(id) {
+  const bc = document.getElementById('idcBarcode');
+  if (!bc) return;
+  bc.innerHTML = '';
+  const heights = [14,20,10,24,16,12,22,8,18,14,20,10,22,16,12,24,8,18,14,20,10,24];
+  // Use id string to vary heights deterministically
+  for (let i = 0; i < 22; i++) {
+    const h = heights[i] + (id.charCodeAt(i % id.length) % 6);
+    const bar = document.createElement('span');
+    bar.style.height = h + 'px';
+    bc.appendChild(bar);
+  }
+}
+
+/** Get initials from a full name */
+function getInitials(name) {
+  return name.trim().split(/\s+/)
+    .slice(0, 2)
+    .map(w => w[0].toUpperCase())
+    .join('');
+}
+
+document.getElementById('memberForm')?.addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const name     = document.getElementById('mFullName')?.value.trim();
+  const voice    = document.getElementById('mVoicePart')?.value;
+  const role     = document.getElementById('mRole')?.value;
+  const phone    = document.getElementById('mPhone')?.value.trim();
+  const year     = document.getElementById('mJoinYear')?.value;
+  const email    = document.getElementById('mEmail')?.value.trim();
+
+  if (!name || !voice || !role || !phone || !year) {
+    showToast('Please fill in all required fields.', 'error');
+    return;
+  }
+
+  // Generate ID
+  const memberID = generateMemberID(name, phone, year);
+  const initials = getInitials(name);
+
+  // Populate card
+  document.getElementById('idcName').textContent  = name;
+  document.getElementById('idcRole').textContent  = `${role}  ·  ${voice}`;
+  document.getElementById('idcID').textContent    = memberID;
+  document.getElementById('idcJoin').textContent  = `Class of ${year}`;
+  document.getElementById('idcYear').textContent  = new Date().getFullYear();
+
+  // Phone row
+  const phoneRow = document.getElementById('idcPhoneRow');
+  if (phoneRow) {
+    phoneRow.style.display = 'flex';
+    document.getElementById('idcPhone').textContent = phone;
+  }
+
+  // Avatar initials
+  const avatar = document.getElementById('idcAvatar');
+  document.getElementById('idcInitials').textContent = initials;
+  avatar?.classList.add('has-initials');
+
+  // Barcode
+  buildBarcode(memberID);
+
+  // Show card as generated
+  document.getElementById('idCard')?.classList.add('generated');
+  document.getElementById('mcActions').style.display = 'flex';
+  document.getElementById('mcNote').style.display    = 'flex';
+  document.querySelector('.mc-hint').style.display   = 'none';
+
+  showToast('Your Member ID is ready: ' + memberID, 'success');
+
+  // Scroll card into view on mobile
+  if (window.innerWidth <= 768) {
+    document.getElementById('idCard')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+});
+
+// Save card — instructs user to screenshot (browser print fallback)
+document.getElementById('btnSaveCard')?.addEventListener('click', () => {
+  showToast('Take a screenshot to save your ID card!', '');
+  // Attempt browser print of just the card
+  window.print();
+});
+
+// Reset form & card
+document.getElementById('btnResetCard')?.addEventListener('click', () => {
+  document.getElementById('memberForm')?.reset();
+
+  document.getElementById('idcName').textContent  = '— Member Name —';
+  document.getElementById('idcRole').textContent  = 'Role  ·  Voice Part';
+  document.getElementById('idcID').textContent    = 'SNE-0000-000';
+  document.getElementById('idcJoin').textContent  = '—';
+  document.getElementById('idcPhoneRow').style.display = 'none';
+
+  const avatar = document.getElementById('idcAvatar');
+  avatar?.classList.remove('has-initials');
+  document.getElementById('idcInitials').textContent = '';
+  document.getElementById('idcBarcode').innerHTML = '';
+
+  document.getElementById('idCard')?.classList.remove('generated');
+  document.getElementById('mcActions').style.display = 'none';
+  document.getElementById('mcNote').style.display    = 'none';
+  document.querySelector('.mc-hint').style.display   = 'block';
+});

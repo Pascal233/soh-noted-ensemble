@@ -753,3 +753,270 @@ button{font-family:var(--fb);cursor:pointer}
   .rep-grid{grid-template-columns:1fr}
   .wwd-grid{grid-template-columns:1fr}
 }
+
+/* ══════════════════════════════════════════════
+   MEMBER PORTAL
+══════════════════════════════════════════════ */
+.member-sec { background: var(--off) }
+
+.member-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* Form box */
+.member-form-box {
+  background: var(--white);
+  border-radius: var(--rl);
+  padding: 40px;
+  border: 1px solid var(--g100);
+  box-shadow: var(--sh2);
+}
+.member-form-box h3 {
+  font-size: 1.5rem;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.mf-desc {
+  font-size: .84rem;
+  color: var(--t600);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+/* Card wrap */
+.member-card-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  position: sticky;
+  top: 96px;
+}
+.mc-hint {
+  font-size: .82rem;
+  color: var(--t400);
+  font-style: italic;
+  text-align: center;
+}
+
+/* ── The ID Card ── */
+.id-card {
+  width: 100%;
+  max-width: 380px;
+  border-radius: var(--rl);
+  overflow: hidden;
+  box-shadow: var(--sh3);
+  background: var(--white);
+  border: 1px solid var(--g100);
+  transition: box-shadow var(--ease);
+  user-select: none;
+}
+.id-card.generated {
+  box-shadow: 0 20px 56px rgba(26,42,94,.22);
+}
+
+/* Card header stripe */
+.idc-header {
+  background: var(--navy);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.idc-logo-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  padding: 2px;
+}
+.idc-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+.idc-org {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.idc-org-name {
+  font-family: var(--fd);
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+}
+.idc-org-tag {
+  font-size: .62rem;
+  color: rgba(255,255,255,.55);
+  letter-spacing: .04em;
+  margin-top: 3px;
+}
+
+/* Card body */
+.idc-body {
+  padding: 22px 20px;
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--g100);
+}
+
+.idc-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--r);
+  background: var(--g50);
+  border: 2px solid var(--g100);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--g200);
+  position: relative;
+  overflow: hidden;
+}
+.idc-avatar.has-initials {
+  background: var(--navy);
+  color: white;
+  border-color: var(--navy);
+}
+.idc-initials-text {
+  font-family: var(--fd);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+  position: absolute;
+  display: none;
+}
+.idc-avatar.has-initials svg { display: none; }
+.idc-avatar.has-initials .idc-initials-text { display: block; }
+
+.idc-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.idc-name {
+  font-family: var(--fd);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.1;
+}
+.idc-role {
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--crimson);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 4px;
+}
+.idc-id-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.idc-id-label {
+  font-size: .64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--t400);
+  min-width: 52px;
+}
+.idc-id-val {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--navy);
+  font-family: 'Courier New', monospace;
+  letter-spacing: .04em;
+}
+
+/* Card footer */
+.idc-footer {
+  background: var(--navy-deep);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.idc-barcode {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+  height: 24px;
+}
+.idc-barcode span {
+  display: block;
+  background: rgba(255,255,255,.5);
+  width: 2px;
+  border-radius: 1px;
+}
+.idc-valid {
+  font-size: .62rem;
+  color: rgba(255,255,255,.45);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+/* Crimson accent line on bottom of card */
+.id-card::after {
+  content: '';
+  display: block;
+  height: 3px;
+  background: var(--crimson);
+}
+
+/* Action buttons */
+.mc-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mc-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: .78rem;
+  color: var(--t600);
+  line-height: 1.6;
+  background: var(--g50);
+  border-radius: var(--r);
+  padding: 12px 14px;
+  border-left: 3px solid var(--crimson);
+  max-width: 380px;
+}
+.mc-note svg { flex-shrink: 0; color: var(--crimson); margin-top: 1px; }
+
+/* Responsive */
+@media(max-width:768px) {
+  .member-grid { grid-template-columns: 1fr; }
+  .member-card-wrap { position: static; }
+  .member-form-box { padding: 26px; }
+}
+@media(max-width:480px) {
+  .id-card { max-width: 100%; }
+}
+
+/* ── Print — ID card only ── */
+@media print {
+  body > *:not(.member-sec) { display: none !important; }
+  .member-sec { padding: 0 !important; }
+  .sh, .member-form-box, .mc-hint, .mc-actions, .mc-note { display: none !important; }
+  .member-grid { display: block !important; }
+  .member-card-wrap { position: static !important; }
+  .id-card { box-shadow: none !important; max-width: 340px; margin: 0 auto; }
+}
