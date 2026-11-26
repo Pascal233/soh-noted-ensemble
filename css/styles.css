@@ -309,33 +309,6 @@ button{font-family:var(--fb);cursor:pointer}
 .val-card p{font-size:.75rem;color:var(--t600);line-height:1.5;margin:0}
 
 /* ══════════════════════════════════════════════
-   REPERTOIRE
-══════════════════════════════════════════════ */
-.rep-sec{background:var(--navy)}
-.rep-sec .section-title{color:#fff}
-.rep-sec .overline{color:rgba(255,255,255,.5)}
-.rep-sec .section-sub{color:rgba(255,255,255,.52)}
-.rep-sec .rule{background:var(--crimson)}
-
-.rep-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.08);border-radius:var(--rl);overflow:hidden}
-
-.rep-card{
-  background:rgba(255,255,255,.04);
-  padding:36px 22px;text-align:center;
-  transition:all var(--ease)
-}
-.rep-card:hover{background:rgba(255,255,255,.1);transform:translateY(-3px)}
-
-.rep-icon{
-  width:52px;height:52px;border-radius:50%;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
-  display:flex;align-items:center;justify-content:center;
-  color:rgba(255,255,255,.75);margin:0 auto 16px
-}
-.rep-card h4{font-size:1.08rem;color:#fff;margin-bottom:8px}
-.rep-card p{font-size:.8rem;color:rgba(255,255,255,.46);line-height:1.65}
-
-/* ══════════════════════════════════════════════
    CONCERTS
 ══════════════════════════════════════════════ */
 .concerts-sec{background:var(--off)}
