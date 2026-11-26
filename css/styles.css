@@ -433,20 +433,20 @@ button { font-family: var(--fb); cursor: pointer }
 
 /* Executive Director card */
 .ed-card {
-  display: grid; grid-template-columns: 220px 1fr;
-  gap: 44px; align-items: start;
+  display: grid; grid-template-columns: 300px 1fr;
+  gap: 48px; align-items: start;
   background: var(--white); border-radius: var(--rl);
   padding: 40px; border: 1px solid var(--g100); border-left: 4px solid var(--crimson);
   box-shadow: var(--sh2); margin-bottom: 52px;
 }
 .ed-avatar {
-  width: 220px; height: 220px; border-radius: var(--rl);
+  width: 300px; height: 380px; border-radius: var(--rl);
   background: var(--navy); border: 1px solid var(--g100);
   display: flex; align-items: center; justify-content: center;
   color: rgba(255,255,255,.2); flex-shrink: 0; overflow: hidden;
 }
-/* Replace placeholder with real photo */
-.ed-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--rl) }
+/* Portrait photo — show face from top */
+.ed-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: top center; border-radius: var(--rl) }
 
 .ed-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px }
 .ed-badge-role {
@@ -884,8 +884,8 @@ button { font-family: var(--fb); cursor: pointer }
   .pay-strip   { gap: 20px; padding: 16px 20px }
   .about-badge { width: 88px; height: 88px; bottom: -14px; right: -14px }
 
-  .ed-card { grid-template-columns: 1fr; text-align: center; padding: 28px; gap: 24px }
-  .ed-avatar { width: 140px; height: 140px; margin: 0 auto }
+  .ed-card   { grid-template-columns: 1fr; text-align: center; padding: 28px; gap: 24px }
+  .ed-avatar { width: 180px; height: 220px; margin: 0 auto }
   .ed-badges  { justify-content: center }
   .ed-tags    { justify-content: center }
   .rule-l     { margin: 14px auto 10px !important }
@@ -903,7 +903,7 @@ button { font-family: var(--fb); cursor: pointer }
   .footer-grid{ grid-template-columns: 1fr }
   .cc-foot    { flex-direction: column; gap: 12px; align-items: flex-start }
   .wwd-grid   { grid-template-columns: 1fr }
-  .ed-avatar  { width: 110px; height: 110px }
+  .ed-avatar  { width: 140px; height: 170px }
 }
 
 /* ── Print — ID card only ── */
