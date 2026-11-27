@@ -7,242 +7,231 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="css/admin.css"/>
-<style>
-  .mp-wrap { min-height: 100vh; background: linear-gradient(135deg, #0f1e4a 0%, #1e3a8a 60%, #1a0a2e 100%); display: flex; align-items: center; justify-content: center; padding: 20px; }
-  .mp-card { background: #fff; border-radius: 20px; padding: 44px 40px; width: 100%; max-width: 440px; box-shadow: 0 24px 64px rgba(0,0,0,.3); text-align: center; border-top: 4px solid #be123c; }
-  .mp-logo { width: 72px; height: 72px; border-radius: 50%; background: #f1f5f9; padding: 5px; object-fit: contain; margin: 0 auto 18px; border: 2px solid #e2e8f0; }
-  .mp-title { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; color: #1e3a8a; margin-bottom: 4px; }
-  .mp-sub   { font-size: .84rem; color: #475569; margin-bottom: 28px; }
-  .mp-tabs  { display: flex; background: #f1f5f9; border-radius: 50px; padding: 4px; margin-bottom: 24px; gap: 4px; }
-  .mp-tab   { flex: 1; padding: 9px; border-radius: 50px; font-size: .78rem; font-weight: 700; color: #94a3b8; transition: all .25s; cursor: pointer; border: none; background: none; font-family: 'Montserrat', sans-serif; }
-  .mp-tab.active { background: #1e3a8a; color: #fff; }
-  .mp-panel { display: none; }
-  .mp-panel.active { display: block; }
-  .mp-back { display: block; margin-top: 20px; font-size: .8rem; color: #94a3b8; }
-  .mp-back:hover { color: #1e3a8a; }
-</style>
+<link rel="stylesheet" href="css/portal.css"/>
 </head>
 <body>
-<div class="mp-wrap">
-  <div class="mp-card">
-    <img src="images/logo.png" alt="Soh NOTED Ensemble" class="mp-logo" onerror="this.style.display='none'"/>
-    <h1 class="mp-title">Member Portal</h1>
-    <p class="mp-sub">Soh NOTED Ensemble &nbsp;&middot;&nbsp; Kumasi, Ghana</p>
+<div class="pl-wrap">
 
-    <div class="mp-tabs">
-      <button class="mp-tab active" onclick="switchTab('mpSignIn', this)">Sign In</button>
-      <button class="mp-tab" onclick="switchTab('mpSetPin', this)">First Time</button>
+  <!-- LEFT: choir image -->
+  <div class="pl-left">
+    <div class="pl-left-bg" style="background-image:url('images/1.jpeg')"></div>
+    <div class="pl-left-overlay"></div>
+    <div class="pl-left-content">
+      <img src="images/logo.png" alt="Soh NOTED Ensemble" onerror="this.style.display='none'"/>
+      <span class="pl-left-role-badge">Member Portal</span>
+      <h1>Soh NOTED Ensemble</h1>
+      <p>Sign in to mark your attendance, track your record and stay connected with the ensemble.</p>
     </div>
-
-    <!-- Sign In -->
-    <div class="mp-panel active" id="mpSignIn">
-      <form id="mpLoginForm" novalidate autocomplete="off">
-        <div class="adm-fg">
-          <label for="mpId">Member ID</label>
-          <input type="text" id="mpId" placeholder="e.g. SNE-2024-4821" autocomplete="off" required/>
-        </div>
-        <div class="adm-fg" style="position:relative">
-          <label for="mpPin">PIN</label>
-          <input type="password" id="mpPin" placeholder="Your PIN" maxlength="6" required/>
-        </div>
-        <div class="adm-error" id="mpLoginErr"></div>
-        <button type="submit" class="adm-btn adm-btn-p" style="width:100%;justify-content:center;border-radius:50px;padding:12px">Sign In</button>
-      </form>
-    </div>
-
-    <!-- First Time / Set PIN -->
-    <div class="mp-panel" id="mpSetPin">
-      <form id="mpSetupForm" novalidate autocomplete="off">
-        <div class="adm-fg">
-          <label for="mpSetupId">Member ID</label>
-          <input type="text" id="mpSetupId" placeholder="Given by the Executive Director" required/>
-        </div>
-        <div class="adm-fg">
-          <label for="mpNewPin">Create PIN (4&#8211;6 digits)</label>
-          <input type="password" id="mpNewPin" placeholder="Choose a PIN" maxlength="6" required/>
-        </div>
-        <div class="adm-fg">
-          <label for="mpNewPin2">Confirm PIN</label>
-          <input type="password" id="mpNewPin2" placeholder="Repeat PIN" maxlength="6" required/>
-        </div>
-        <div class="adm-error" id="mpSetupErr"></div>
-        <button type="submit" class="adm-btn adm-btn-p" style="width:100%;justify-content:center;border-radius:50px;padding:12px">Set PIN &amp; Sign In</button>
-      </form>
-    </div>
-
-    <!-- Dashboard (shown after login) -->
-    <div class="mp-panel" id="mpDashboard">
-      <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:18px;margin-bottom:20px;text-align:left">
-        <p style="font-size:.72rem;color:#0369a1;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Signed in as</p>
-        <p style="font-size:1.1rem;font-weight:700;color:#0f172a;font-family:'Cormorant Garamond',serif" id="mpWelcomeName">&#8212;</p>
-        <p style="font-size:.8rem;color:#475569" id="mpWelcomeMeta">&#8212;</p>
-      </div>
-
-      <!-- Today session -->
-      <div id="mpTodayBox" style="margin-bottom:20px">
-        <div id="mpNoSession" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;color:#94a3b8">
-          <p style="font-weight:600;color:#475569">No session today</p>
-          <p style="font-size:.82rem">Check back on your next rehearsal day.</p>
-        </div>
-        <div id="mpSessionBox" style="display:none;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:12px;padding:18px;text-align:left">
-          <p style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#4f46e5;margin-bottom:4px" id="mpSesType">&#8212;</p>
-          <p style="font-size:1.05rem;font-weight:700;color:#0f172a;margin-bottom:6px;font-family:'Cormorant Garamond',serif" id="mpSesTitle">&#8212;</p>
-          <p style="font-size:.8rem;color:#475569;margin-bottom:14px" id="mpSesMeta">&#8212;</p>
-          <!-- Status boxes -->
-          <div id="mpPresent" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;color:#166534;font-weight:700;font-size:.88rem">Verified Present</div>
-          <div id="mpPending" style="display:none;background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:12px;color:#854d0e;font-size:.88rem">Check-in submitted &#8212; awaiting director approval</div>
-          <div id="mpCodeArea" style="display:none">
-            <p style="font-size:.82rem;color:#475569;margin-bottom:10px">Enter the 6-digit code from the director:</p>
-            <div style="display:flex;gap:6px;margin-bottom:10px" id="mpCodeBoxes">
-              <input class="att-code-box" maxlength="1" inputmode="numeric" style="flex:1"/>
-              <input class="att-code-box" maxlength="1" inputmode="numeric" style="flex:1"/>
-              <input class="att-code-box" maxlength="1" inputmode="numeric" style="flex:1"/>
-              <input class="att-code-box" maxlength="1" inputmode="numeric" style="flex:1"/>
-              <input class="att-code-box" maxlength="1" inputmode="numeric" style="flex:1"/>
-              <input class="att-code-box" maxlength="1" inputmode="numeric" style="flex:1"/>
-            </div>
-            <div class="adm-error" id="mpCodeErr"></div>
-            <button class="adm-btn adm-btn-p" id="mpSubmitCode" style="width:100%;justify-content:center;border-radius:50px;padding:11px">Mark Me Present</button>
-          </div>
-          <div id="mpClosed" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px;color:#9f1239;font-size:.88rem">Check-in window has closed for this session.</div>
-          <div id="mpNotYet" style="display:none;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px;color:#92400e;font-size:.88rem">Check-in opens <strong id="mpOpensIn">&#8212;</strong> before the session starts.</div>
-        </div>
-      </div>
-
-      <!-- My attendance summary -->
-      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;text-align:left;margin-bottom:16px">
-        <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;margin-bottom:12px">My Attendance</p>
-        <div style="display:flex;gap:16px">
-          <div style="text-align:center;flex:1"><span style="display:block;font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:#1e3a8a" id="mpPct">&#8212;%</span><small style="font-size:.64rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em">Attendance</small></div>
-          <div style="text-align:center;flex:1"><span style="display:block;font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:#15803d" id="mpStatP">0</span><small style="font-size:.64rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em">Present</small></div>
-          <div style="text-align:center;flex:1"><span style="display:block;font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:#be123c" id="mpStatA">0</span><small style="font-size:.64rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em">Absent</small></div>
-        </div>
-      </div>
-
-      <button class="adm-btn adm-btn-o" style="width:100%;justify-content:center;border-radius:50px" onclick="mpLogout()">Sign Out</button>
-    </div>
-
-    <a href="index.html" class="mp-back">&#8592; Back to main website</a>
   </div>
+
+  <!-- RIGHT: form -->
+  <div class="pl-right">
+    <div class="pl-form-wrap">
+      <img src="images/logo.png" alt="Soh NOTED Ensemble" class="pl-form-logo" onerror="this.style.display='none'"/>
+      <h2 class="pl-form-title">Member Sign In</h2>
+      <p class="pl-form-sub">Use your Member ID and PIN issued by the Executive Director.</p>
+
+      <div class="pl-tabs">
+        <button class="pl-tab active" onclick="switchTab('plSignIn',this)">Sign In</button>
+        <button class="pl-tab" onclick="switchTab('plSetPin',this)">First Time</button>
+      </div>
+
+      <!-- Sign In -->
+      <div class="pl-panel active" id="plSignIn">
+        <form id="plLoginForm" novalidate autocomplete="off">
+          <div class="pl-fg">
+            <label for="plId">Member ID</label>
+            <div class="pl-input-wrap">
+              <span class="pl-input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+              <input type="text" id="plId" placeholder="e.g. SNE-2024-4821" autocomplete="off" required/>
+            </div>
+          </div>
+          <div class="pl-fg">
+            <label for="plPin">PIN</label>
+            <div class="pl-input-wrap">
+              <span class="pl-input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+              <input type="password" id="plPin" placeholder="Your PIN" maxlength="6" required/>
+              <button type="button" class="pl-eye" onclick="toggleEye('plPin')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="pl-error" id="plLoginErr"></div>
+          <button type="submit" class="pl-submit">Sign In</button>
+        </form>
+      </div>
+
+      <!-- First Time / Set PIN -->
+      <div class="pl-panel" id="plSetPin">
+        <form id="plSetupForm" novalidate autocomplete="off">
+          <div class="pl-fg">
+            <label for="plSetupId">Member ID</label>
+            <div class="pl-input-wrap">
+              <span class="pl-input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+              <input type="text" id="plSetupId" placeholder="Given by the Executive Director" required/>
+            </div>
+          </div>
+          <div class="pl-fg">
+            <label for="plNewPin">Create PIN (4&ndash;6 digits)</label>
+            <div class="pl-input-wrap">
+              <span class="pl-input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+              <input type="password" id="plNewPin" placeholder="Choose a PIN" maxlength="6" required/>
+            </div>
+          </div>
+          <div class="pl-fg">
+            <label for="plNewPin2">Confirm PIN</label>
+            <div class="pl-input-wrap">
+              <span class="pl-input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+              <input type="password" id="plNewPin2" placeholder="Repeat PIN" maxlength="6" required/>
+            </div>
+          </div>
+          <div class="pl-error" id="plSetupErr"></div>
+          <button type="submit" class="pl-submit">Set PIN &amp; Sign In</button>
+        </form>
+      </div>
+
+      <!-- Dashboard -->
+      <div class="pl-panel" id="plDashboard">
+        <div class="pl-dash-welcome">
+          <p>Welcome back</p>
+          <p class="pl-dash-name" id="plDashName">—</p>
+          <p class="pl-dash-meta" id="plDashMeta">—</p>
+        </div>
+        <div class="pl-stats">
+          <div class="pl-stat"><span class="pl-stat-n" id="plPct">—</span><span class="pl-stat-l">Attendance</span></div>
+          <div class="pl-stat"><span class="pl-stat-n" id="plP" style="color:#166534">0</span><span class="pl-stat-l">Present</span></div>
+          <div class="pl-stat"><span class="pl-stat-n" id="plA" style="color:#be123c">0</span><span class="pl-stat-l">Absent</span></div>
+        </div>
+        <div id="plNoSes" class="pl-session-box" style="text-align:center;color:#94a3b8">
+          <p style="font-weight:600;color:#475569;margin-bottom:4px">No session today</p>
+          <p style="font-size:.8rem">Check back on your next rehearsal day.</p>
+        </div>
+        <div id="plSesBox" class="pl-session-box" style="display:none">
+          <p class="pl-session-type" id="plSesType">—</p>
+          <p class="pl-session-title" id="plSesTitle">—</p>
+          <p class="pl-session-meta" id="plSesMeta">—</p>
+          <div id="plSPresent" class="pl-status-present" style="display:none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verified Present
+          </div>
+          <div id="plSPending" class="pl-status-pending" style="display:none">Check-in submitted — awaiting director approval</div>
+          <div id="plSClosed"  class="pl-status-closed"  style="display:none">Check-in window has closed for this session.</div>
+          <div id="plSSoon"    class="pl-status-soon"    style="display:none">Check-in opens <strong id="plOpensIn">—</strong> before start.</div>
+          <div id="plSCode" style="display:none">
+            <p style="font-size:.8rem;color:#475569;margin-bottom:10px">Enter the 6-digit code from the director:</p>
+            <div class="pl-code-row" id="plCodeBoxes">
+              <input class="pl-code-box" maxlength="1" inputmode="numeric"/>
+              <input class="pl-code-box" maxlength="1" inputmode="numeric"/>
+              <input class="pl-code-box" maxlength="1" inputmode="numeric"/>
+              <input class="pl-code-box" maxlength="1" inputmode="numeric"/>
+              <input class="pl-code-box" maxlength="1" inputmode="numeric"/>
+              <input class="pl-code-box" maxlength="1" inputmode="numeric"/>
+            </div>
+            <div class="pl-error" id="plCodeErr"></div>
+            <button class="pl-code-submit" id="plCodeSubmit">Mark Me Present</button>
+          </div>
+        </div>
+        <button class="pl-sign-out" onclick="plLogout()">Sign Out</button>
+      </div>
+
+      <a href="index.html" class="pl-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Back to main website
+      </a>
+    </div>
+  </div>
+
 </div>
 <script>
-function switchTab(id, btn) {
-  document.querySelectorAll('.mp-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.mp-panel').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(id).classList.add('active');
+const G=k=>{try{return JSON.parse(localStorage.getItem(k))||[];}catch{return[];}};
+const S=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const KM='sne_m',KS='sne_s',KR='sne_r';
+function hp(p){let h=0;for(let i=0;i<p.length;i++){h=Math.imul(31,h)+p.charCodeAt(i)|0;}return h.toString(16);}
+function switchTab(id,btn){document.querySelectorAll('.pl-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.pl-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById(id).classList.add('active');}
+function toggleEye(id){const f=document.getElementById(id);f.type=f.type==='password'?'text':'password';}
+function getTodaySes(){const t=new Date().toISOString().split('T')[0];return G(KS).find(s=>s.date===t)||null;}
+function getRecord(sId,mId){return G(KR).find(r=>r.sId===sId&&r.mId===mId);}
+function setRecord(sId,mId,status){let rs=G(KR);const i=rs.findIndex(r=>r.sId===sId&&r.mId===mId);const rec={sId,mId,status,time:new Date().toISOString()};if(i>=0)rs[i]=rec;else rs.push(rec);S(KR,rs);}
+function sesTiming(s){const now=new Date();const start=new Date(s.date+'T'+s.start);const openAt=new Date(start.getTime()-s.openBefore*60000);const closeAt=new Date(start.getTime()+s.closeAfter*60000);if(now<openAt)return{status:'upcoming',openAt};if(now>closeAt)return{status:'closed'};return{status:'open'};}
+function memberStats(mId){const ss=G(KS),rs=G(KR);let p=0,a=0;ss.forEach(s=>{const r=rs.find(r=>r.sId===s.id&&r.mId===mId);if(r&&r.status==='present')p++;else a++;});const tot=ss.length;const pct=tot>0?Math.round(p/tot*100):0;return{p,a,tot,pct};}
+
+let CU=null;
+function plLogout(){sessionStorage.removeItem('pl_user');CU=null;document.querySelectorAll('.pl-panel').forEach(p=>p.classList.remove('active'));document.getElementById('plSignIn').classList.add('active');document.querySelectorAll('.pl-tab').forEach((t,i)=>t.classList.toggle('active',i===0));}
+
+function showDash(){
+  document.querySelectorAll('.pl-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('plDashboard').classList.add('active');
+  document.querySelectorAll('.pl-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('plDashName').textContent=CU.name;
+  document.getElementById('plDashMeta').textContent=CU.role+' · '+CU.voice+' · '+CU.id;
+  const st=memberStats(CU.id);
+  document.getElementById('plPct').textContent=st.pct+'%';
+  document.getElementById('plP').textContent=st.p;
+  document.getElementById('plA').textContent=st.a;
+  loadToday();
 }
 
-const G = k => { try { return JSON.parse(localStorage.getItem(k)) || []; } catch { return []; } };
-const S = (k, v) => localStorage.setItem(k, JSON.stringify(v));
-const KM = 'sne_m', KS = 'sne_s', KR = 'sne_r';
-
-function hp(pin) { let h = 0; for (let i = 0; i < pin.length; i++) { h = Math.imul(31, h) + pin.charCodeAt(i) | 0; } return h.toString(16); }
-
-function getTodaySes() { const today = new Date().toISOString().split('T')[0]; return G(KS).find(s => s.date === today) || null; }
-function getRecord(sId, mId) { return G(KR).find(r => r.sId === sId && r.mId === mId); }
-function setRecord(sId, mId, status) { let rs = G(KR); const i = rs.findIndex(r => r.sId === sId && r.mId === mId); const rec = { sId, mId, status, time: new Date().toISOString() }; if (i >= 0) rs[i] = rec; else rs.push(rec); S(KR, rs); }
-function sesTiming(s) { const now = new Date(); const start = new Date(s.date + 'T' + s.start); const openAt = new Date(start.getTime() - s.openBefore * 60000); const closeAt = new Date(start.getTime() + s.closeAfter * 60000); if (now < openAt) return { status: 'upcoming', openAt }; if (now > closeAt) return { status: 'closed' }; return { status: 'open' }; }
-function memberStats(mId) { const ss = G(KS), rs = G(KR); let p = 0, a = 0; ss.forEach(s => { const r = rs.find(r => r.sId === s.id && r.mId === mId); if (r && r.status === 'present') p++; else a++; }); const tot = ss.length; const pct = tot > 0 ? Math.round(p / tot * 100) : 0; return { p, a, tot, pct }; }
-
-let CU = null;
-function mpLogout() { sessionStorage.removeItem('mp_user'); CU = null; document.querySelectorAll('.mp-panel').forEach(p => p.classList.remove('active')); document.getElementById('mpSignIn').classList.add('active'); document.querySelectorAll('.mp-tab').forEach((t, i) => { t.classList.toggle('active', i === 0); }); }
-
-function loginSuccess(m) { CU = m; sessionStorage.setItem('mp_user', m.id); showDashboard(); }
-
-function showDashboard() {
-  document.querySelectorAll('.mp-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('mpDashboard').classList.add('active');
-  document.querySelectorAll('.mp-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('mpWelcomeName').textContent = CU.name;
-  document.getElementById('mpWelcomeMeta').textContent = CU.role + ' · ' + CU.voice + ' · ' + CU.id;
-  const st = memberStats(CU.id);
-  document.getElementById('mpPct').textContent = st.pct + '%';
-  document.getElementById('mpStatP').textContent = st.p;
-  document.getElementById('mpStatA').textContent = st.a;
-  loadMpToday();
+function loadToday(){
+  const ses=getTodaySes();
+  if(!ses){document.getElementById('plNoSes').style.display='block';document.getElementById('plSesBox').style.display='none';return;}
+  document.getElementById('plNoSes').style.display='none';
+  document.getElementById('plSesBox').style.display='block';
+  document.getElementById('plSesType').textContent=ses.type;
+  document.getElementById('plSesTitle').textContent=ses.title;
+  document.getElementById('plSesMeta').textContent=ses.start+' – '+ses.end+' · '+ses.venue;
+  ['plSPresent','plSPending','plSClosed','plSSoon','plSCode'].forEach(id=>document.getElementById(id).style.display='none');
+  const rec=getRecord(ses.id,CU.id);
+  const timing=sesTiming(ses);
+  if(rec&&rec.status==='present'){document.getElementById('plSPresent').style.display='flex';}
+  else if(rec&&rec.status==='pending'){document.getElementById('plSPending').style.display='block';}
+  else if(timing.status==='open'){document.getElementById('plSCode').style.display='block';initCode(ses);}
+  else if(timing.status==='upcoming'){document.getElementById('plSSoon').style.display='block';document.getElementById('plOpensIn').textContent=ses.openBefore+' mins';}
+  else{document.getElementById('plSClosed').style.display='block';}
 }
 
-function loadMpToday() {
-  const ses = getTodaySes();
-  if (!ses) { document.getElementById('mpNoSession').style.display = 'block'; document.getElementById('mpSessionBox').style.display = 'none'; return; }
-  document.getElementById('mpNoSession').style.display = 'none';
-  document.getElementById('mpSessionBox').style.display = 'block';
-  document.getElementById('mpSesType').textContent = ses.type;
-  document.getElementById('mpSesTitle').textContent = ses.title;
-  document.getElementById('mpSesMeta').textContent = ses.start + ' - ' + ses.end + ' · ' + ses.venue;
-  ['mpPresent','mpPending','mpCodeArea','mpClosed','mpNotYet'].forEach(id => document.getElementById(id).style.display = 'none');
-  const rec = getRecord(ses.id, CU.id);
-  const timing = sesTiming(ses);
-  if (rec && rec.status === 'present') { document.getElementById('mpPresent').style.display = 'block'; }
-  else if (rec && rec.status === 'pending') { document.getElementById('mpPending').style.display = 'block'; }
-  else if (timing.status === 'open') {
-    document.getElementById('mpCodeArea').style.display = 'block';
-    initMpCode(ses);
-  } else if (timing.status === 'upcoming') {
-    document.getElementById('mpNotYet').style.display = 'block';
-    document.getElementById('mpOpensIn').textContent = ses.openBefore + ' mins';
-  } else {
-    document.getElementById('mpClosed').style.display = 'block';
-  }
-}
-
-function initMpCode(ses) {
-  const boxes = document.querySelectorAll('#mpCodeBoxes .att-code-box');
-  boxes.forEach((b, i) => {
-    b.value = '';
-    b.oninput = () => { b.value = b.value.replace(/\D/g, ''); if (b.value && i < boxes.length - 1) boxes[i + 1].focus(); };
-    b.onkeydown = e => { if (e.key === 'Backspace' && !b.value && i > 0) boxes[i - 1].focus(); };
-  });
-  const btn = document.getElementById('mpSubmitCode');
-  const newBtn = btn.cloneNode(true);
-  btn.parentNode.replaceChild(newBtn, btn);
-  newBtn.addEventListener('click', () => {
-    const entered = Array.from(boxes).map(b => b.value).join('');
-    const err = document.getElementById('mpCodeErr');
-    err.textContent = '';
-    if (entered.length < 6) { err.textContent = 'Enter all 6 digits.'; return; }
-    if (sesTiming(ses).status !== 'open') { err.textContent = 'Check-in window has closed.'; return; }
-    if (entered !== ses.code) { err.textContent = 'Wrong code. Ask the director for the correct code.'; boxes.forEach(b => { b.style.borderColor = '#be123c'; b.value = ''; }); boxes[0].focus(); return; }
-    setRecord(ses.id, CU.id, 'pending');
-    loadMpToday();
-    alert('Check-in submitted! Waiting for the director to verify.');
+function initCode(ses){
+  const boxes=document.querySelectorAll('#plCodeBoxes .pl-code-box');
+  boxes.forEach((b,i)=>{b.value='';b.oninput=()=>{b.value=b.value.replace(/\D/g,'');if(b.value&&i<boxes.length-1)boxes[i+1].focus();};b.onkeydown=e=>{if(e.key==='Backspace'&&!b.value&&i>0)boxes[i-1].focus();};});
+  const btn=document.getElementById('plCodeSubmit');
+  const nb=btn.cloneNode(true);btn.parentNode.replaceChild(nb,btn);
+  nb.addEventListener('click',()=>{
+    const entered=Array.from(boxes).map(b=>b.value).join('');
+    const err=document.getElementById('plCodeErr');err.textContent='';
+    if(entered.length<6){err.textContent='Enter all 6 digits.';return;}
+    if(sesTiming(ses).status!=='open'){err.textContent='Check-in window has closed.';return;}
+    if(entered!==ses.code){err.textContent='Wrong code. Ask the director.';boxes.forEach(b=>{b.style.borderColor='#be123c';b.value='';});boxes[0].focus();return;}
+    setRecord(ses.id,CU.id,'pending');
+    loadToday();
   });
 }
 
-document.getElementById('mpLoginForm').addEventListener('submit', e => {
+document.getElementById('plLoginForm').addEventListener('submit',e=>{
   e.preventDefault();
-  const id = document.getElementById('mpId').value.trim().toUpperCase();
-  const pin = document.getElementById('mpPin').value.trim();
-  const err = document.getElementById('mpLoginErr');
-  err.textContent = '';
-  const m = G(KM).find(m => m.id === id);
-  if (!m) { err.textContent = 'Member ID not found. Contact the Executive Director.'; return; }
-  if (m.status === 'inactive') { err.textContent = 'Account deactivated. Contact admin.'; return; }
-  if (m.pin !== hp(pin)) { err.textContent = 'Incorrect PIN. Try again or contact admin.'; return; }
-  loginSuccess(m);
+  const id=document.getElementById('plId').value.trim().toUpperCase();
+  const pin=document.getElementById('plPin').value.trim();
+  const err=document.getElementById('plLoginErr');err.textContent='';
+  const m=G(KM).find(m=>m.id===id);
+  if(!m){err.textContent='Member ID not found. Contact the Executive Director.';return;}
+  if(m.status==='inactive'){err.textContent='Account deactivated. Contact admin.';return;}
+  if(m.pin!==hp(pin)){err.textContent='Incorrect PIN. Try again or contact admin.';return;}
+  CU=m;sessionStorage.setItem('pl_user',m.id);showDash();
 });
 
-document.getElementById('mpSetupForm').addEventListener('submit', e => {
+document.getElementById('plSetupForm').addEventListener('submit',e=>{
   e.preventDefault();
-  const id = document.getElementById('mpSetupId').value.trim().toUpperCase();
-  const pin = document.getElementById('mpNewPin').value.trim();
-  const pin2 = document.getElementById('mpNewPin2').value.trim();
-  const err = document.getElementById('mpSetupErr');
-  err.textContent = '';
-  if (pin.length < 4) { err.textContent = 'PIN must be at least 4 digits.'; return; }
-  if (pin !== pin2) { err.textContent = 'PINs do not match.'; return; }
-  let ms = G(KM);
-  const i = ms.findIndex(m => m.id === id);
-  if (i < 0) { err.textContent = 'Member ID not found. Contact the Executive Director.'; return; }
-  ms[i].pin = hp(pin); S(KM, ms);
-  loginSuccess(ms[i]);
+  const id=document.getElementById('plSetupId').value.trim().toUpperCase();
+  const pin=document.getElementById('plNewPin').value.trim();
+  const pin2=document.getElementById('plNewPin2').value.trim();
+  const err=document.getElementById('plSetupErr');err.textContent='';
+  if(pin.length<4){err.textContent='PIN must be at least 4 digits.';return;}
+  if(pin!==pin2){err.textContent='PINs do not match.';return;}
+  let ms=G(KM);const i=ms.findIndex(m=>m.id===id);
+  if(i<0){err.textContent='Member ID not found. Contact the Executive Director.';return;}
+  ms[i].pin=hp(pin);S(KM,ms);CU=ms[i];sessionStorage.setItem('pl_user',ms[i].id);showDash();
 });
 
-// Auto-login if session active
-const savedId = sessionStorage.getItem('mp_user');
-if (savedId) { const m = G(KM).find(m => m.id === savedId); if (m) { CU = m; showDashboard(); } }
+const sid=sessionStorage.getItem('pl_user');
+if(sid){const m=G(KM).find(m=>m.id===sid);if(m){CU=m;showDash();}}
 </script>
 </body>
 </html>

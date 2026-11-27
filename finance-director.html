@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Finance Director | Soh NOTED Ensemble</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/portal.css"/>
+</head>
+<body>
+<div class="pl-wrap">
+
+  <!-- LEFT: choir image -->
+  <div class="pl-left">
+    <div class="pl-left-bg" style="background-image:url('images/2.jpeg')"></div>
+    <div class="pl-left-overlay" style="background:linear-gradient(to bottom,rgba(5,46,22,.3) 0%,rgba(5,46,22,.8) 100%)"></div>
+    <div class="pl-left-content">
+      <img src="images/logo.png" alt="Soh NOTED Ensemble" onerror="this.style.display='none'"/>
+      <span class="pl-left-role-badge" style="background:rgba(21,128,61,.25);border-color:rgba(21,128,61,.5)">Finance Director</span>
+      <h1>Finance Portal</h1>
+      <p>Manage dues, track ticket revenue and keep the ensemble's finances organised and transparent.</p>
+    </div>
+  </div>
+
+  <!-- RIGHT: form -->
+  <div class="pl-right">
+    <div class="pl-form-wrap">
+      <img src="images/logo.png" alt="Soh NOTED Ensemble" class="pl-form-logo" onerror="this.style.display='none'"/>
+      <h2 class="pl-form-title">Finance Director</h2>
+      <p class="pl-form-sub">Sign in with your Staff ID and PIN.</p>
+
+      <div class="pl-panel active" id="fdLogin">
+        <form id="fdForm" novalidate autocomplete="off">
+          <div class="pl-fg">
+            <label for="fdId">Staff ID</label>
+            <div class="pl-input-wrap">
+              <span class="pl-input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+              <input type="text" id="fdId" placeholder="Your Staff ID" autocomplete="off" required/>
+            </div>
+          </div>
+          <div class="pl-fg">
+            <label for="fdPin">PIN</label>
+            <div class="pl-input-wrap">
+              <span class="pl-input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+              <input type="password" id="fdPin" placeholder="Your PIN" maxlength="6" required/>
+              <button type="button" class="pl-eye" onclick="toggleEye('fdPin')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="pl-error" id="fdErr"></div>
+          <button type="submit" class="pl-submit" style="background:#15803d">Sign In</button>
+        </form>
+      </div>
+
+      <!-- Dashboard -->
+      <div class="pl-panel" id="fdDash">
+        <div class="pl-dash-welcome" style="background:linear-gradient(135deg,#166534,#15803d)">
+          <p>Signed in as</p>
+          <p class="pl-dash-name" id="fdDashName">—</p>
+          <p class="pl-dash-meta">Finance Director &nbsp;·&nbsp; Soh NOTED Ensemble</p>
+        </div>
+
+        <!-- Dues summary -->
+        <div class="pl-session-box">
+          <p class="pl-session-type">Dues Summary</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+            <div style="text-align:center;padding:12px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">
+              <span style="display:block;font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:#166534" id="fdPaid">0</span>
+              <span style="font-size:.66rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em">Paid</span>
+            </div>
+            <div style="text-align:center;padding:12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca">
+              <span style="display:block;font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:#be123c" id="fdUnpaid">0</span>
+              <span style="font-size:.66rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em">Unpaid</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ticket revenue -->
+        <div class="pl-session-box">
+          <p class="pl-session-type">Ticket Revenue</p>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:#166534;margin-top:4px">GHS <span id="fdRevenue">0</span></p>
+          <p style="font-size:.78rem;color:#94a3b8;margin-top:4px"><span id="fdTickets">0</span> ticket orders total</p>
+        </div>
+
+        <a href="admin.html" class="pl-submit" style="text-align:center;text-decoration:none;display:block;background:#15803d;border-radius:10px;padding:13px;font-size:.84rem;font-weight:700;letter-spacing:.06em;color:#fff">
+          Open Full Dashboard
+        </a>
+        <button class="pl-sign-out" onclick="fdLogout()" style="margin-top:10px">Sign Out</button>
+      </div>
+
+      <a href="index.html" class="pl-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Back to main website
+      </a>
+    </div>
+  </div>
+
+</div>
+<script>
+const G=k=>{try{return JSON.parse(localStorage.getItem(k))||[];}catch{return[];}};
+const S=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+function hp(p){let h=0;for(let i=0;i<p.length;i++){h=Math.imul(31,h)+p.charCodeAt(i)|0;}return h.toString(16);}
+function toggleEye(id){const f=document.getElementById(id);f.type=f.type==='password'?'text':'password';}
+
+let CU=null;
+function fdLogout(){sessionStorage.removeItem('fd_user');CU=null;document.getElementById('fdLogin').classList.add('active');document.getElementById('fdDash').classList.remove('active');}
+
+function showFdDash(m){
+  CU=m;
+  document.getElementById('fdLogin').classList.remove('active');
+  document.getElementById('fdDash').classList.add('active');
+  document.getElementById('fdDashName').textContent=m.name;
+  // Dues stats
+  const dues=JSON.parse(localStorage.getItem('sne_dues')||'[]');
+  const paid=dues.filter(d=>d.paid).length;
+  const unpaid=dues.filter(d=>!d.paid).length;
+  document.getElementById('fdPaid').textContent=paid;
+  document.getElementById('fdUnpaid').textContent=unpaid;
+  // Ticket revenue
+  const tickets=G('sne_tickets');
+  const rev=tickets.filter(t=>t.status==='paid').reduce((s,t)=>s+(t.amount||0),0);
+  document.getElementById('fdRevenue').textContent=rev.toLocaleString();
+  document.getElementById('fdTickets').textContent=tickets.length;
+}
+
+document.getElementById('fdForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const id=document.getElementById('fdId').value.trim().toUpperCase();
+  const pin=document.getElementById('fdPin').value.trim();
+  const err=document.getElementById('fdErr');err.textContent='';
+  const ms=G('sne_m');
+  const m=ms.find(m=>m.id===id);
+  if(!m){err.textContent='Staff ID not found. Contact the Executive Director.';return;}
+  if(m.status==='inactive'){err.textContent='Account deactivated.';return;}
+  if(m.pin!==hp(pin)){err.textContent='Incorrect PIN.';return;}
+  if(!m.isAdmin&&m.role!=='Treasurer'&&m.role!=='Finance Director'){err.textContent='You do not have Finance Director access.';return;}
+  sessionStorage.setItem('fd_user',m.id);
+  showFdDash(m);
+});
+
+const sid=sessionStorage.getItem('fd_user');
+if(sid){const m=G('sne_m').find(m=>m.id===sid);if(m)showFdDash(m);}
+</script>
+</body>
+</html>
