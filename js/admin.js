@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 /* =============================================
    Soh NOTED Ensemble — Admin Portal JS
    Admin ID : SNE-ADMIN-0001
@@ -199,6 +199,8 @@ function goPage(pageId){
   if(pageId==='pageAttendance') initAttendancePage();
   if(pageId==='pageMessages')   loadMessages();
   if(pageId==='pageSettings')   loadSettings();
+  if(pageId==='pageAnnouncements') loadAnnouncements();
+  if(pageId==='pageDues')          loadDues();
 }
 window.goPage=goPage;
 
@@ -644,9 +646,10 @@ function renderLive(){
       <td>${m.voice}</td>
       <td><span class="adm-pill ${cls}">${cap(st)}</span></td>
       <td>${tm}</td>
-      <td style="display:flex;gap:5px">
-        ${st!=='present'?`<button class="adm-btn adm-btn-green adm-btn-sm" onclick="liveMarkPresent('${sId}','${m.id}')">Present</button>`:''}
-        ${st==='present'?`<button class="adm-btn adm-btn-sm adm-btn-o" onclick="liveRemove('${sId}','${m.id}')">Remove</button>`:''}
+      <td style="display:flex;gap:5px;flex-wrap:wrap">
+        ${st==='pending'?`<button class="adm-btn adm-btn-green adm-btn-sm" onclick="liveApprove('${sId}','${m.id}')">Approve</button><button class="adm-btn adm-btn-danger adm-btn-sm" onclick="liveReject('${sId}','${m.id}')">Reject</button>`:'}
+        ${st==='absent'?`<button class="adm-btn adm-btn-green adm-btn-sm" onclick="liveMarkPresent('${sId}','${m.id}')">Mark Present</button>`:'}
+        ${st==='present'?`<button class="adm-btn adm-btn-sm adm-btn-o" onclick="liveRemove('${sId}','${m.id}')">Remove</button>`:'}
       </td>
     </tr>`;
   }).join('')||'<tr><td colspan="6" class="adm-empty">No members match filter.</td></tr>';
@@ -657,6 +660,8 @@ function renderLive(){
 }
 window.liveMarkPresent=function(sId,mId){setRecord(sId,mId,'present');renderLive();toast('Marked Present.','success');};
 window.liveRemove=function(sId,mId){S(KR,G(KR).filter(r=>!(r.sId===sId&&r.mId===mId)));renderLive();toast('Mark removed.','');};
+window.liveApprove=function(sId,mId){ setRecord(sId,mId,'present'); renderLive(); toast('Approved — member is Present.','success'); };
+window.liveReject=function(sId,mId){ S(KR,G(KR).filter(r=>!(r.sId===sId&&r.mId===mId))); renderLive(); toast('Check-in rejected.','warn'); };
 
 // Reports
 function initReports(){
@@ -836,3 +841,152 @@ function loadSettings(){
 // (The main site saves to localStorage key sne_tickets on payment)
 // Contact form messages from the main site go to sne_msgs
 
+// ═══════════════════════════════════════════
+// ANNOUNCEMENTS
+// ═══════════════════════════════════════════
+// Add Announcements page to admin nav and handle it
+// Key: sne_announcements — array of {id, title, body, pinned, date, author}
+
+function loadAnnouncements(){
+  renderAnnouncements();
+  document.getElementById('addAnnBtn')?.addEventListener('click',()=>{
+    const f=document.getElementById('addAnnForm');
+    f.style.display=f.style.display==='none'?'block':'none';
+  });
+  document.getElementById('cancelAnnBtn')?.addEventListener('click',()=>{
+    document.getElementById('addAnnForm').style.display='none';
+  });
+  document.getElementById('saveAnnBtn')?.addEventListener('click',()=>{
+    const title=document.getElementById('annTitle').value.trim();
+    const body=document.getElementById('annBody').value.trim();
+    const pinned=document.getElementById('annPinned').checked;
+    if(!title||!body){toast('Please add a title and message.','error');return;}
+    const anns=JSON.parse(localStorage.getItem('sne_announcements')||'[]');
+    anns.unshift({id:'ANN-'+Date.now(),title,body,pinned,date:new Date().toISOString(),author:'Frederick Owusu Boakye'});
+    localStorage.setItem('sne_announcements',JSON.stringify(anns));
+    document.getElementById('addAnnForm').style.display='none';
+    document.getElementById('annTitle').value='';
+    document.getElementById('annBody').value='';
+    document.getElementById('annPinned').checked=false;
+    renderAnnouncements();
+    toast('Announcement posted!','success');
+  });
+}
+
+function renderAnnouncements(){
+  const anns=JSON.parse(localStorage.getItem('sne_announcements')||'[]');
+  const list=document.getElementById('annList');
+  if(!list) return;
+  if(!anns.length){list.innerHTML='<p class="adm-empty" style="padding:40px;text-align:center">No announcements yet.</p>';return;}
+  list.innerHTML=anns.map(a=>`
+    <div class="adm-ann-item ${a.pinned?'pinned':''}">
+      <div class="adm-ann-head">
+        <div>
+          ${a.pinned?'<span class="adm-pill adm-pill-blue" style="margin-right:8px">Pinned</span>':''}
+          <strong>${a.title}</strong>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:.74rem;color:var(--t400)">${new Date(a.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</span>
+          <button class="adm-btn adm-btn-danger adm-btn-sm" onclick="deleteAnn('${a.id}')">Delete</button>
+        </div>
+      </div>
+      <p class="adm-ann-body">${a.body}</p>
+    </div>`).join('');
+}
+window.deleteAnn=function(id){
+  if(!confirm('Delete this announcement?')) return;
+  const anns=JSON.parse(localStorage.getItem('sne_announcements')||'[]').filter(a=>a.id!==id);
+  localStorage.setItem('sne_announcements',JSON.stringify(anns));
+  renderAnnouncements();
+  toast('Announcement deleted.','warn');
+};
+
+// ═══════════════════════════════════════════
+// DUES TRACKER
+// ═══════════════════════════════════════════
+// Key: sne_dues — array of {memberId, month, year, amount, paid, paidDate, method, notes}
+
+function loadDues(){
+  renderDuesTable();
+  document.getElementById('duesMonthSel')?.addEventListener('change',renderDuesTable);
+  document.getElementById('duesYearSel')?.addEventListener('change',renderDuesTable);
+  document.getElementById('duesSrch')?.addEventListener('input',renderDuesTable);
+  document.getElementById('exportDuesBtn')?.addEventListener('click',exportDues);
+  document.getElementById('genDuesBtn')?.addEventListener('click',generateMonthlyDues);
+}
+
+function renderDuesTable(){
+  const month=document.getElementById('duesMonthSel')?.value||'';
+  const year=document.getElementById('duesYearSel')?.value||new Date().getFullYear().toString();
+  const srch=(document.getElementById('duesSrch')?.value||'').toLowerCase();
+  const dues=JSON.parse(localStorage.getItem('sne_dues')||'[]');
+  let ms=G(KM).filter(m=>!m.isAdmin);
+  if(srch) ms=ms.filter(m=>m.name.toLowerCase().includes(srch)||m.id.toLowerCase().includes(srch));
+  const tbody=document.getElementById('duesBody');
+  if(!tbody) return;
+  if(!ms.length){tbody.innerHTML='<tr><td colspan="7" class="adm-empty">No members yet.</td></tr>';return;}
+  tbody.innerHTML=ms.map(m=>{
+    const key=`${m.id}-${month||'01'}-${year}`;
+    const due=dues.find(d=>d.memberId===m.id&&d.month===(month||'01')&&d.year===year);
+    const paid=due&&due.paid;
+    return `<tr>
+      <td style="font-family:monospace;font-size:.74rem">${m.id}</td>
+      <td><strong>${m.name}</strong></td>
+      <td>${m.voice}</td>
+      <td>GHS ${due?due.amount:'20'}</td>
+      <td><span class="adm-pill ${paid?'adm-pill-green':'adm-pill-red'}">${paid?'Paid':'Unpaid'}</span></td>
+      <td>${due&&due.paidDate?new Date(due.paidDate).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'—'}</td>
+      <td>
+        ${!paid?`<button class="adm-btn adm-btn-green adm-btn-sm" onclick="markDuesPaid('${m.id}','${month||'01'}','${year}')">Mark Paid</button>`:''}
+        ${paid?`<button class="adm-btn adm-btn-sm adm-btn-o" onclick="markDuesUnpaid('${m.id}','${month||'01'}','${year}')">Undo</button>`:''}
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+window.markDuesPaid=function(mId,month,year){
+  let dues=JSON.parse(localStorage.getItem('sne_dues')||'[]');
+  const i=dues.findIndex(d=>d.memberId===mId&&d.month===month&&d.year===year);
+  const rec={memberId:mId,month,year,amount:20,paid:true,paidDate:new Date().toISOString(),method:'cash'};
+  if(i>=0) dues[i]=rec; else dues.push(rec);
+  localStorage.setItem('sne_dues',JSON.stringify(dues));
+  renderDuesTable();
+  toast('Dues marked as paid.','success');
+};
+window.markDuesUnpaid=function(mId,month,year){
+  let dues=JSON.parse(localStorage.getItem('sne_dues')||'[]');
+  const i=dues.findIndex(d=>d.memberId===mId&&d.month===month&&d.year===year);
+  if(i>=0){dues[i].paid=false;dues[i].paidDate=null;}
+  localStorage.setItem('sne_dues',JSON.stringify(dues));
+  renderDuesTable();
+  toast('Dues marked as unpaid.','');
+};
+function generateMonthlyDues(){
+  const month=document.getElementById('duesMonthSel')?.value||new Date().getMonth().toString().padStart(2,'0');
+  const year=document.getElementById('duesYearSel')?.value||new Date().getFullYear().toString();
+  const ms=G(KM).filter(m=>!m.isAdmin);
+  let dues=JSON.parse(localStorage.getItem('sne_dues')||'[]');
+  let added=0;
+  ms.forEach(m=>{
+    const exists=dues.find(d=>d.memberId===m.id&&d.month===month&&d.year===year);
+    if(!exists){dues.push({memberId:m.id,month,year,amount:20,paid:false,paidDate:null});added++;}
+  });
+  localStorage.setItem('sne_dues',JSON.stringify(dues));
+  renderDuesTable();
+  toast(added+' dues records generated!','success');
+}
+function exportDues(){
+  const dues=JSON.parse(localStorage.getItem('sne_dues')||'[]');
+  const ms=G(KM).filter(m=>!m.isAdmin);
+  let csv='ID,Name,Voice,Month,Year,Amount,Status,Date Paid\n';
+  ms.forEach(m=>{
+    dues.filter(d=>d.memberId===m.id).forEach(d=>{
+      csv+=`"${m.id}","${m.name}","${m.voice}","${d.month}","${d.year}",${d.amount},"${d.paid?'Paid':'Unpaid'}","${d.paidDate?new Date(d.paidDate).toLocaleDateString('en-GB'):'-'}"\n`;
+    });
+  });
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='SNE_Dues_'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click();
+  toast('Dues exported!','success');
+}

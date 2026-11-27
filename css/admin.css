@@ -1,4 +1,4 @@
-/* =============================================
+﻿/* =============================================
    Soh NOTED Ensemble — Admin Portal
    Professional Dashboard v2
    ============================================= */
@@ -624,3 +624,11 @@ input, select, textarea { font-family: var(--fb); }
   .adm-login-card    { padding: 32px 24px; }
   .adm-page-header h2{ font-size: 1.6rem; }
 }
+
+/* Announcement items */
+.adm-ann-item{background:var(--white);border-radius:var(--rl);border:1px solid var(--border);padding:20px 22px;margin-bottom:12px;transition:box-shadow var(--adm-ease)}
+.adm-ann-item:hover{box-shadow:var(--sh2)}
+.adm-ann-item.pinned{border-left:4px solid var(--navy-mid);background:#fafbff}
+.adm-ann-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.adm-ann-head strong{font-size:.95rem;color:var(--t900)}
+.adm-ann-body{font-size:.88rem;color:var(--t600);line-height:1.75;white-space:pre-wrap}

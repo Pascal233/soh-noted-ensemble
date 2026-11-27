@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Soh NOTED Ensemble — main.js
  * Handles: navbar, scroll animations, ticket modal,
  *          Paystack payments, MoMo / USSD flow, contact form
@@ -676,7 +676,14 @@ function renderCheckinState(ses){
   if(rec&&rec.status==='present'){
     const el=document.getElementById('attCheckedIn');
     el.style.display='flex';
-    document.getElementById('attCheckinTime').textContent='Checked in at '+fmtTime(rec.time);
+    document.getElementById('attCheckinTime').textContent='Verified Present at '+fmtTime(rec.time);
+  } else if(rec&&rec.status==='pending'){
+    const el=document.getElementById('attCheckedIn');
+    el.style.display='flex';
+    el.style.background='#fefce8';
+    el.style.borderColor='#fde047';
+    el.style.color='#854d0e';
+    document.getElementById('attCheckinTime').textContent='Submitted '+fmtTime(rec.time)+' — Awaiting director approval';
   } else if(rec&&rec.status==='excused'){
     const el=document.getElementById('attExcusedShown');
     el.style.display='flex';
@@ -716,8 +723,8 @@ function initAttCodeBoxes(ses){
       boxes[0].focus();
       return;
     }
-    setRecord(ses.id,CU.id,'present');
-    attToast('You are marked Present!','success');
+    setRecord(ses.id,CU.id,'pending');
+    attToast('Check-in submitted! Waiting for the director to verify.','success');
     loadAttTodaySession();
   });
 }
@@ -735,8 +742,9 @@ function loadAttHistory(){
   tbody.innerHTML=sessions.map(s=>{
     const r=records.find(r=>r.sId===s.id&&r.mId===CU.id);
     const status=r?r.status:'absent';
-    const cls=status==='present'?'att-pill-green':status==='excused'?'att-pill-amber':'att-pill-red';
-    return `<tr><td>${fmtDate(s.date)}</td><td>${s.title}</td><td><span class="att-pill att-pill-blue">${s.type}</span></td><td><span class="att-pill ${cls}">${cap(status)}</span></td></tr>`;
+    const cls=status==='present'?'att-pill-green':status==='pending'?'att-pill-blue':status==='excused'?'att-pill-amber':'att-pill-red';
+    const lbl=status==='pending'?'Pending Approval':cap(status);
+    return `<tr><td>${fmtDate(s.date)}</td><td>${s.title}</td><td><span class="att-pill att-pill-blue">${s.type}</span></td><td><span class="att-pill ${cls}">${lbl}</span></td></tr>`;
   }).join('');
 }
 
