@@ -1,4 +1,4 @@
-/* =============================================
+﻿/* =============================================
    Soh NOTED Ensemble  |  v5 — Professional
    Fonts   : Cormorant Garamond + Montserrat
    Palette : Navy #1a2a5e  |  Crimson #8b1a2e
@@ -1044,4 +1044,91 @@ button{font-family:var(--fb);cursor:pointer}
   .att-login-box { padding: 24px 18px; }
   .att-stats-grid { grid-template-columns: 1fr 1fr; }
   .att-code-row { flex-wrap: wrap; }
+}
+
+/* ══════════════════════════════════════════
+   ROLE PORTALS SECTION
+══════════════════════════════════════════ */
+.portals-sec { background: linear-gradient(180deg, var(--off) 0%, #f0f4ff 100%); }
+
+.portals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.portal-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  background: var(--white);
+  border-radius: var(--rl);
+  padding: 28px 24px;
+  border: 1px solid var(--g100);
+  box-shadow: var(--sh1);
+  text-decoration: none;
+  transition: transform var(--ease), box-shadow var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.portal-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+}
+.portal-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--sh3);
+}
+
+.portal-card-navy::before   { background: var(--navy); }
+.portal-card-crimson::before{ background: var(--crimson); }
+.portal-card-green::before  { background: #15803d; }
+.portal-card-amber::before  { background: #b45309; }
+.portal-card-mid::before    { background: var(--navy-mid); }
+
+.portal-card-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--rl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+}
+.portal-card-navy   .portal-card-icon { background: linear-gradient(135deg, var(--navy-deep), var(--navy)); }
+.portal-card-crimson .portal-card-icon { background: linear-gradient(135deg, #9f1239, var(--crimson)); }
+.portal-card-green  .portal-card-icon { background: linear-gradient(135deg, #166534, #15803d); }
+.portal-card-amber  .portal-card-icon { background: linear-gradient(135deg, #92400e, #b45309); }
+.portal-card-mid    .portal-card-icon { background: linear-gradient(135deg, var(--navy), var(--navy-mid)); }
+
+.portal-card-body { flex: 1; }
+.portal-card-body h3 {
+  font-family: var(--fd);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.portal-card-body p {
+  font-size: .84rem;
+  color: var(--t600);
+  line-height: 1.72;
+  margin-bottom: 14px;
+}
+.portal-card-cta {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--crimson);
+  letter-spacing: .04em;
+}
+.portal-card:hover .portal-card-cta {
+  text-decoration: underline;
+}
+
+@media(max-width: 480px) {
+  .portals-grid { grid-template-columns: 1fr; }
+  .portal-card  { flex-direction: column; align-items: flex-start; }
 }

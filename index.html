@@ -35,7 +35,7 @@
       <li><a href="#about">About</a></li>
       <li><a href="#concerts">Concerts</a></li>
       <li><a href="#gallery">Gallery</a></li>
-      <li><a href="#members">Members</a></li>
+      <li><a href="#members">Portals</a></li>
       <li><a href="#contact">Contact</a></li>
       <li>
         <a href="#concerts" class="nav-cta">
@@ -423,430 +423,88 @@
   </div>
 </section>
 
-<!-- â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—
-     â•‘      MEMBERS & ATTENDANCE    â•‘
-     â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-<section id="members" class="sp member-sec" aria-labelledby="member-title">
+<!-- ╔══════════════════════════════╗
+     ║        PORTALS               ║
+     ╚══════════════════════════════╝ -->
+<section id="members" class="sp portals-sec" aria-labelledby="portals-title">
   <div class="container">
-
     <div class="sh">
-      <span class="overline">Member Portal</span>
-      <h2 class="section-title" id="member-title">Members &amp; Attendance</h2>
+      <span class="overline">Staff &amp; Members</span>
+      <h2 class="section-title" id="portals-title">Access Your Portal</h2>
       <div class="rule"></div>
-      <p class="section-sub" style="margin-top:14px">Get your digital member ID card, or sign in to mark your attendance for today's rehearsal or program.</p>
+      <p class="section-sub" style="margin-top:14px">Select your role below to access your dedicated portal. All portals are password protected.</p>
     </div>
 
-    <!-- â”€â”€ PORTAL TABS â”€â”€ -->
-    <div class="portal-tabs">
-      <button class="portal-tab active" data-ptab="ptIdCard">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-        My ID Card
-      </button>
-      <button class="portal-tab" data-ptab="ptAttendance">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        Attendance
-      </button>
+    <div class="portals-grid">
+
+      <!-- Executive Director -->
+      <a href="admin.html" class="portal-card portal-card-navy fu">
+        <div class="portal-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div class="portal-card-body">
+          <h3>Executive Director</h3>
+          <p>Full dashboard — members, attendance, tickets, messages, dues and announcements.</p>
+          <span class="portal-card-cta">Go to Dashboard &rarr;</span>
+        </div>
+      </a>
+
+      <!-- Music Director -->
+      <a href="music-director.html" class="portal-card portal-card-crimson fu">
+        <div class="portal-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </div>
+        <div class="portal-card-body">
+          <h3>Music Director</h3>
+          <p>Manage rehearsal sessions, create session codes, view and approve attendance.</p>
+          <span class="portal-card-cta">Sign In &rarr;</span>
+        </div>
+      </a>
+
+      <!-- Finance Director -->
+      <a href="finance-director.html" class="portal-card portal-card-green fu">
+        <div class="portal-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="1" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="portal-card-body">
+          <h3>Finance Director</h3>
+          <p>Track dues payments, view ticket revenue, manage financial records and exports.</p>
+          <span class="portal-card-cta">Sign In &rarr;</span>
+        </div>
+      </a>
+
+      <!-- Welfare Director -->
+      <a href="welfare-director.html" class="portal-card portal-card-amber fu">
+        <div class="portal-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="portal-card-body">
+          <h3>Welfare Director</h3>
+          <p>View member directory, birthdays, welfare records and member contact details.</p>
+          <span class="portal-card-cta">Sign In &rarr;</span>
+        </div>
+      </a>
+
+      <!-- Members -->
+      <a href="member-portal.html" class="portal-card portal-card-mid fu">
+        <div class="portal-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="portal-card-body">
+          <h3>Choir Members</h3>
+          <p>Sign in to mark your attendance, view your attendance history and check your member ID.</p>
+          <span class="portal-card-cta">Sign In &rarr;</span>
+        </div>
+      </a>
+
     </div>
 
-    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         TAB 1 "” ID CARD GENERATOR
-         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-    <div class="portal-panel active" id="ptIdCard">
-      <div class="member-grid">
-        <div class="form-box fu">
-          <h3>Get Your Member Card</h3>
-          <p class="mf-desc">Fill in your details as a member of Soh NOTED Ensemble and your unique ID card will be ready in seconds.</p>
-          <form id="memberForm" data-form="member-id" novalidate autocomplete="off">
-            <div class="fg">
-              <label for="mFullName">Full Name</label>
-              <input type="text" id="mFullName" placeholder="e.g. Kwame Asante" required/>
-            </div>
-            <div class="frow">
-              <div class="fg">
-                <label for="mVoicePart">Voice Part</label>
-                <select id="mVoicePart" required>
-                  <option value="">Select voice part</option>
-                  <option value="Soprano">Soprano</option>
-                  <option value="Mezzo-Soprano">Mezzo-Soprano</option>
-                  <option value="Alto">Alto</option>
-                  <option value="Tenor">Tenor</option>
-                  <option value="Baritone">Baritone</option>
-                  <option value="Bass">Bass</option>
-                  <option value="Conductor">Conductor</option>
-                  <option value="Pianist">Pianist / Accompanist</option>
-                </select>
-              </div>
-              <div class="fg">
-                <label for="mRole">Role</label>
-                <select id="mRole" required>
-                  <option value="">Select role</option>
-                  <option value="Chorister">Chorister</option>
-                  <option value="Section Leader">Section Leader</option>
-                  <option value="Assistant Director">Assistant Director</option>
-                  <option value="Musical Director">Musical Director</option>
-                  <option value="Accompanist">Accompanist</option>
-                  <option value="Secretary">Secretary</option>
-                  <option value="Treasurer">Treasurer</option>
-                  <option value="Publicity">Publicity Officer</option>
-                </select>
-              </div>
-            </div>
-            <div class="frow">
-              <div class="fg">
-                <label for="mPhone">Phone Number</label>
-                <input type="tel" id="mPhone" placeholder="0XX XXX XXXX" required/>
-              </div>
-              <div class="fg">
-                <label for="mJoinYear">Year Joined</label>
-                <select id="mJoinYear" required>
-                  <option value="">Select year</option>
-                  <option value="2024">2024</option><option value="2023">2023</option>
-                  <option value="2022">2022</option><option value="2021">2021</option>
-                  <option value="2020">2020</option><option value="2019">2019</option>
-                  <option value="2018">2018</option><option value="2017">2017</option>
-                  <option value="2016">2016</option><option value="2015">2015</option>
-                </select>
-              </div>
-            </div>
-            <div class="fg">
-              <label for="mEmail">Email Address (optional)</label>
-              <input type="email" id="mEmail" placeholder="you@email.com"/>
-            </div>
-            <button type="submit" class="btn btn-p btn-submit" style="width:100%;justify-content:center;margin-top:4px">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-              Generate My Member ID
-            </button>
-          </form>
-        </div>
+    <p style="text-align:center;margin-top:32px;font-size:.82rem;color:var(--t400)">
+      Your login details are issued by the Executive Director. Contact 
+      <a href="tel:+233548580708" style="color:var(--crimson);font-weight:600">0548 580 708</a> if you need access.
+    </p>
 
-        <div class="member-card-wrap fu">
-          <p class="mc-hint">Your digital ID card will appear here</p>
-          <div class="id-card" id="idCard">
-            <div class="idc-header">
-              <div class="idc-logo-wrap">
-                <img src="images/logo.png" alt="Soh NOTED Ensemble" class="idc-logo" onerror="this.style.display='none'"/>
-              </div>
-              <div class="idc-org">
-                <span class="idc-org-name">Soh NOTED Ensemble</span>
-                <span class="idc-org-tag">Noted Well &nbsp;Â·&nbsp; Kumasi, Ghana</span>
-              </div>
-            </div>
-            <div class="idc-body">
-              <div class="idc-avatar" id="idcAvatar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                <span id="idcInitials" class="idc-initials-text"></span>
-              </div>
-              <div class="idc-info">
-                <p class="idc-name" id="idcName">"” Member Name "”</p>
-                <p class="idc-role" id="idcRole">Role Â· Voice Part</p>
-                <div class="idc-id-row"><span class="idc-id-label">Member ID</span><span class="idc-id-val" id="idcID">SNE-0000-000</span></div>
-                <div class="idc-id-row"><span class="idc-id-label">Joined</span><span class="idc-id-val" id="idcJoin">"”</span></div>
-                <div class="idc-id-row" id="idcPhoneRow" style="display:none"><span class="idc-id-label">Phone</span><span class="idc-id-val" id="idcPhone">"”</span></div>
-              </div>
-            </div>
-            <div class="idc-footer">
-              <div class="idc-barcode" id="idcBarcode"></div>
-              <span class="idc-valid">Valid Member Â· <span id="idcYear">2026</span></span>
-            </div>
-          </div>
-          <div class="mc-actions" id="mcActions" style="display:none">
-            <button class="btn btn-p btn-sm" id="btnSaveCard">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-              Save / Screenshot
-            </button>
-            <button class="btn btn-o btn-sm" id="btnResetCard">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.9"/></svg>
-              New Card
-            </button>
-          </div>
-          <p class="mc-note" id="mcNote" style="display:none">
-            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
-            Take a screenshot or tap "Save" to keep your ID card.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         TAB 2 "” ATTENDANCE
-         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-    <div class="portal-panel" id="ptAttendance">
-
-      <!-- LOGIN -->
-      <div class="att-view active" id="attViewLogin">
-        <div class="att-login-outer">
-          <div class="att-login-box fu">
-            <div class="att-login-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <h3>Member Sign In</h3>
-            <p class="att-sub">Sign in with your Member ID and PIN to mark your attendance.</p>
-            <form id="attLoginForm" novalidate autocomplete="off">
-              <div class="fg"><label for="attId">Member ID</label><input type="text" id="attId" placeholder="e.g. SNE-2024-4821" required/></div>
-              <div class="fg" style="position:relative">
-                <label for="attPin">PIN</label>
-                <input type="password" id="attPin" placeholder="Your PIN" maxlength="6" required/>
-                <button type="button" id="attPinToggle" style="position:absolute;right:12px;bottom:12px;background:none;border:none;cursor:pointer;color:var(--t400)"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-              </div>
-              <div class="att-error" id="attLoginErr"></div>
-              <button type="submit" class="btn btn-p" style="width:100%;justify-content:center">Sign In</button>
-            </form>
-            <p class="att-help">First time? <button class="att-text-btn" id="attShowSetup">Set your PIN here</button></p>
-            <p class="att-help" style="margin-top:4px">Admin: use ID <strong>SNE-ADMIN-0001</strong></p>
-          </div>
-
-          <div class="att-login-box fu" id="attSetupBox" style="display:none">
-            <div class="att-login-icon" style="background:var(--crimson)">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            </div>
-            <h3>Set Your PIN</h3>
-            <p class="att-sub">First time signing in? Choose a 4"“6 digit PIN.</p>
-            <form id="attSetupForm" novalidate autocomplete="off">
-              <div class="fg"><label for="attSetupId">Member ID</label><input type="text" id="attSetupId" placeholder="Your Member ID" required/></div>
-              <div class="fg"><label for="attSetupPin">New PIN</label><input type="password" id="attSetupPin" placeholder="Choose 4"“6 digits" maxlength="6" required/></div>
-              <div class="fg"><label for="attSetupPin2">Confirm PIN</label><input type="password" id="attSetupPin2" placeholder="Repeat PIN" maxlength="6" required/></div>
-              <div class="att-error" id="attSetupErr"></div>
-              <button type="submit" class="btn btn-p" style="width:100%;justify-content:center">Set PIN &amp; Sign In</button>
-            </form>
-            <p class="att-help"><button class="att-text-btn" id="attHideSetup">Back to Sign In</button></p>
-          </div>
-        </div>
-      </div>
-
-      <!-- MEMBER DASHBOARD -->
-      <div class="att-view" id="attViewMember">
-        <div class="att-dash-header">
-          <div>
-            <p class="att-welcome-label">Welcome back</p>
-            <h3 class="att-welcome-name" id="attMemberName">"”</h3>
-            <p class="att-welcome-meta"><span id="attMemberRole">"”</span> &nbsp;Â·&nbsp; <span id="attMemberVoice">"”</span> &nbsp;Â·&nbsp; <span id="attMemberIdDisp">"”</span></p>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-            <div class="att-pct-pill" id="attPctPill"><span id="attPct">"”%</span><small>Attendance</small></div>
-            <button class="btn btn-o btn-sm" onclick="attLogout()">Sign Out</button>
-          </div>
-        </div>
-
-        <div class="att-dash-grid">
-          <!-- Today's session -->
-          <div class="att-card">
-            <div class="att-card-head">
-              <h4>Today's Session</h4>
-              <span class="att-type-badge" id="attTypeBadge">"”</span>
-            </div>
-            <div id="attNoSession" class="att-empty-state">
-              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-              <p>No session today.</p><span>Check back on the next rehearsal day.</span>
-            </div>
-            <div id="attSessionDetails" style="display:none">
-              <div class="att-ses-info">
-                <p class="att-ses-title" id="attSessionTitle">"”</p>
-                <div class="att-ses-meta">
-                  <span id="attSessionDate">"”</span>
-                  <span id="attSessionTime">"”</span>
-                  <span id="attSessionVenue">"”</span>
-                </div>
-              </div>
-              <div class="att-checkin-wrap">
-                <div id="attCheckedIn" class="att-status-box att-status-present" style="display:none">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                  <div><p>You are <strong>Present</strong></p><small id="attCheckinTime">"”</small></div>
-                </div>
-                <div id="attExcusedShown" class="att-status-box att-status-excused" style="display:none">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
-                  <div><p>Excuse submitted</p><small id="attExcuseShownReason">"”</small></div>
-                </div>
-                <div id="attCodeForm" style="display:none;padding:16px 20px">
-                  <p style="font-size:.86rem;color:var(--t600);margin-bottom:12px">Enter the 6-digit code from the director:</p>
-                  <div class="att-code-row" id="attCodeBoxes">
-                    <input class="att-code-box" maxlength="1" inputmode="numeric"/>
-                    <input class="att-code-box" maxlength="1" inputmode="numeric"/>
-                    <input class="att-code-box" maxlength="1" inputmode="numeric"/>
-                    <input class="att-code-box" maxlength="1" inputmode="numeric"/>
-                    <input class="att-code-box" maxlength="1" inputmode="numeric"/>
-                    <input class="att-code-box" maxlength="1" inputmode="numeric"/>
-                  </div>
-                  <div class="att-error" id="attCodeErr" style="padding:0;margin-top:8px"></div>
-                  <button class="btn btn-p" id="attSubmitCode" style="margin-top:14px">Mark Me Present</button>
-                </div>
-                <div id="attWindowClosed" class="att-status-box att-status-closed" style="display:none">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>
-                  <p>Check-in window has closed.</p>
-                </div>
-                <div id="attNotYet" class="att-status-box att-status-soon" style="display:none">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  <p>Check-in opens <strong id="attOpensIn">"”</strong> before start.</p>
-                </div>
-                <div id="attExcuseBtn" style="display:none;padding:0 20px 16px">
-                  <button class="btn btn-o btn-sm" id="attOpenExcuse">Submit Apology / Excuse</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- History -->
-          <div class="att-card">
-            <div class="att-card-head">
-              <h4>My Attendance History</h4>
-              <div class="att-mini-stats">
-                <span class="att-ms att-ms-green">Present: <strong id="attStatP">0</strong></span>
-                <span class="att-ms att-ms-amber">Excused: <strong id="attStatE">0</strong></span>
-                <span class="att-ms att-ms-red">Absent: <strong id="attStatA">0</strong></span>
-              </div>
-            </div>
-            <div class="att-table-wrap">
-              <table class="att-table"><thead><tr><th>Date</th><th>Session</th><th>Type</th><th>Status</th></tr></thead>
-              <tbody id="attHistoryBody"><tr><td colspan="4" class="att-empty-row">No sessions yet.</td></tr></tbody></table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ADMIN DASHBOARD -->
-      <div class="att-view" id="attViewAdmin">
-        <div class="att-dash-header">
-          <div>
-            <p class="att-welcome-label">Admin Dashboard</p>
-            <h3 class="att-welcome-name" id="attAdminName">"”</h3>
-            <span class="att-admin-badge">Executive Director</span>
-          </div>
-          <button class="btn btn-o btn-sm" onclick="attLogout()">Sign Out</button>
-        </div>
-
-        <div class="att-tabs">
-          <button class="att-tab active" data-atab="atOverview">Overview</button>
-          <button class="att-tab" data-atab="atSessions">Sessions</button>
-          <button class="att-tab" data-atab="atLive">Live</button>
-          <button class="att-tab" data-atab="atReports">Reports</button>
-          <button class="att-tab" data-atab="atMembers">Members</button>
-        </div>
-
-        <!-- OVERVIEW -->
-        <div class="att-panel active" id="atOverview">
-          <div class="att-stats-grid">
-            <div class="att-stat-box"><div class="att-stat-icon att-si-blue"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><span class="att-stat-n" id="ovTotal">0</span><span class="att-stat-l">Total Members</span></div></div>
-            <div class="att-stat-box"><div class="att-stat-icon att-si-green"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div><span class="att-stat-n" id="ovActive">0</span><span class="att-stat-l">Active (â‰¥70%)</span></div></div>
-            <div class="att-stat-box"><div class="att-stat-icon att-si-amber"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg></div><div><span class="att-stat-n" id="ovRisk">0</span><span class="att-stat-l">At Risk (40"“69%)</span></div></div>
-            <div class="att-stat-box"><div class="att-stat-icon att-si-red"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg></div><div><span class="att-stat-n" id="ovInactive">0</span><span class="att-stat-l">Inactive (&lt;40%)</span></div></div>
-            <div class="att-stat-box"><div class="att-stat-icon att-si-blue"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg></div><div><span class="att-stat-n" id="ovSessions">0</span><span class="att-stat-l">Sessions</span></div></div>
-            <div class="att-stat-box"><div class="att-stat-icon att-si-green"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><span class="att-stat-n" id="ovLast">"”</span><span class="att-stat-l">Last Session</span></div></div>
-          </div>
-        </div>
-
-        <!-- SESSIONS -->
-        <div class="att-panel" id="atSessions">
-          <div class="att-panel-topbar"><h4>Manage Sessions</h4><button class="btn btn-p btn-sm" id="attNewSesBtn">+ New Session</button></div>
-          <div class="att-inline-form" id="attNewSesForm" style="display:none">
-            <div class="att-form-row2">
-              <div class="fg"><label>Title</label><input type="text" id="sTitleI" placeholder="e.g. Weekly Rehearsal"/></div>
-              <div class="fg"><label>Type</label><select id="sTypeI"><option>Rehearsal</option><option>Concert</option><option>Church Program</option><option>Meeting</option><option>Other</option></select></div>
-            </div>
-            <div class="att-form-row3">
-              <div class="fg"><label>Date</label><input type="date" id="sDateI"/></div>
-              <div class="fg"><label>Start Time</label><input type="time" id="sStartI"/></div>
-              <div class="fg"><label>End Time</label><input type="time" id="sEndI"/></div>
-            </div>
-            <div class="fg"><label>Venue</label><input type="text" id="sVenueI" placeholder="Kumasi, Ashanti Region"/></div>
-            <div class="att-form-row2">
-              <div class="fg"><label>Open check-in (mins before start)</label><input type="number" id="sBeforeI" value="30"/></div>
-              <div class="fg"><label>Close check-in (mins after start)</label><input type="number" id="sAfterI" value="60"/></div>
-            </div>
-            <div class="fg">
-              <label>Session Code (announce at venue only)</label>
-              <div style="display:flex;align-items:center;gap:14px">
-                <span class="att-big-code" id="attCodePreview">"”"”</span>
-                <button type="button" class="att-text-btn" id="attRegenCode">Regenerate</button>
-              </div>
-            </div>
-            <div style="display:flex;gap:10px;margin-top:8px">
-              <button class="btn btn-p btn-sm" id="attSaveSes">Save Session</button>
-              <button class="btn btn-o btn-sm" id="attCancelSes">Cancel</button>
-            </div>
-          </div>
-          <div class="att-table-wrap"><table class="att-table"><thead><tr><th>Date</th><th>Title</th><th>Type</th><th>Time</th><th>Code</th><th>Status</th><th></th></tr></thead>
-          <tbody id="attSesBody"><tr><td colspan="7" class="att-empty-row">No sessions yet.</td></tr></tbody></table></div>
-        </div>
-
-        <!-- LIVE -->
-        <div class="att-panel" id="atLive">
-          <div class="att-panel-topbar"><h4>Live Attendance</h4><select class="att-select" id="attLiveSel"><option value="">Select session</option></select></div>
-          <div class="att-live-banner" id="attLiveBanner" style="display:none">
-            <div><p class="att-live-lbl">Code</p><p class="att-live-code" id="attLiveCode">"”"”</p></div>
-            <div><p class="att-live-lbl">Window</p><p class="att-live-win" id="attLiveWin">"”</p></div>
-            <div class="att-live-counts"><span class="att-pill att-pill-green" id="attLivePres">0 Present</span><span class="att-pill att-pill-amber" id="attLiveExc">0 Excused</span><span class="att-pill att-pill-red" id="attLiveAbs">0 Absent</span></div>
-          </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
-            <input class="att-search" type="text" id="attLiveSrch" placeholder="Search"¦"/>
-            <select class="att-select" id="attLiveVoice"><option value="">All Voice Parts</option><option>Soprano</option><option>Mezzo-Soprano</option><option>Alto</option><option>Tenor</option><option>Baritone</option><option>Bass</option></select>
-          </div>
-          <div class="att-table-wrap"><table class="att-table"><thead><tr><th>ID</th><th>Name</th><th>Voice</th><th>Status</th><th>Time</th><th>Override</th></tr></thead>
-          <tbody id="attLiveBody"><tr><td colspan="6" class="att-empty-row">Select a session above.</td></tr></tbody></table></div>
-        </div>
-
-        <!-- REPORTS -->
-        <div class="att-panel" id="atReports">
-          <div class="att-panel-topbar"><h4>Attendance Reports</h4><button class="btn btn-o btn-sm" id="attExportBtn">Export CSV</button></div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
-            <input class="att-search" type="text" id="attRptSrch" placeholder="Search"¦"/>
-            <select class="att-select" id="attRptVoice"><option value="">All Voice Parts</option><option>Soprano</option><option>Mezzo-Soprano</option><option>Alto</option><option>Tenor</option><option>Baritone</option><option>Bass</option></select>
-            <select class="att-select" id="attRptStatus"><option value="">All</option><option value="active">Active (â‰¥70%)</option><option value="risk">At Risk</option><option value="inactive">Inactive</option></select>
-          </div>
-          <div class="att-table-wrap"><table class="att-table"><thead><tr><th>ID</th><th>Name</th><th>Voice</th><th>Present</th><th>Excused</th><th>Absent</th><th>%</th><th>Status</th></tr></thead>
-          <tbody id="attRptBody"><tr><td colspan="8" class="att-empty-row">No data yet.</td></tr></tbody></table></div>
-        </div>
-
-        <!-- MEMBERS -->
-        <div class="att-panel" id="atMembers">
-          <div class="att-panel-topbar"><h4>Manage Members</h4><button class="btn btn-p btn-sm" id="attAddMemBtn">+ Add Member</button></div>
-          <div class="att-inline-form" id="attAddMemForm" style="display:none">
-            <div class="att-form-row2">
-              <div class="fg"><label>Full Name</label><input type="text" id="mNameI" placeholder="Full name"/></div>
-              <div class="fg"><label>Member ID <small>(auto)</small></label><input type="text" id="mIdI" readonly/></div>
-            </div>
-            <div class="att-form-row2">
-              <div class="fg"><label>Voice Part</label><select id="mVoiceI"><option>Soprano</option><option>Mezzo-Soprano</option><option>Alto</option><option>Tenor</option><option>Baritone</option><option>Bass</option><option>Conductor</option><option>Pianist / Accompanist</option></select></div>
-              <div class="fg"><label>Role</label><select id="mRoleI"><option>Chorister</option><option>Section Leader</option><option>Assistant Director</option><option>Musical Director</option><option>Accompanist</option><option>Secretary</option><option>Treasurer</option><option>Publicity Officer</option></select></div>
-            </div>
-            <div class="att-form-row2">
-              <div class="fg"><label>Phone</label><input type="tel" id="mPhoneI" placeholder="0XX XXX XXXX"/></div>
-              <div class="fg"><label>Year Joined</label><input type="number" id="mYearI" placeholder="2024" min="2000" max="2030"/></div>
-            </div>
-            <div class="fg"><label>Temporary PIN (4"“6 digits)</label><input type="text" id="mPinI" placeholder="Member sets permanent PIN on first login" maxlength="6"/></div>
-            <div class="att-error" id="attMemErr"></div>
-            <div style="display:flex;gap:10px;margin-top:8px">
-              <button class="btn btn-p btn-sm" id="attSaveMem">Save Member</button>
-              <button class="btn btn-o btn-sm" id="attCancelMem">Cancel</button>
-            </div>
-          </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
-            <input class="att-search" type="text" id="attMemSrch" placeholder="Search"¦"/>
-            <select class="att-select" id="attMemVoice"><option value="">All Voice Parts</option><option>Soprano</option><option>Mezzo-Soprano</option><option>Alto</option><option>Tenor</option><option>Baritone</option><option>Bass</option></select>
-          </div>
-          <div class="att-table-wrap"><table class="att-table"><thead><tr><th>ID</th><th>Name</th><th>Voice</th><th>Role</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody id="attMemBody"><tr><td colspan="7" class="att-empty-row">No members yet.</td></tr></tbody></table></div>
-        </div>
-
-      </div><!-- /attViewAdmin -->
-
-      <!-- Excuse modal -->
-      <div class="att-modal-bg" id="attExcuseModal">
-        <div class="att-modal">
-          <div class="att-modal-head"><h4>Submit Apology / Excuse</h4><button class="att-modal-x" id="attExcuseClose">âœ•</button></div>
-          <div class="att-modal-body">
-            <div class="fg"><label>Reason</label><select id="attExcuseReason"><option value="">Select reason</option><option>Illness / Medical</option><option>Work / School</option><option>Family Emergency</option><option>Travel</option><option>Other</option></select></div>
-            <div class="fg"><label>Details (optional)</label><textarea id="attExcuseDetails" rows="3" placeholder="Any additional info"¦"></textarea></div>
-            <div class="att-error" id="attExcuseErr"></div>
-          </div>
-          <div class="att-modal-foot">
-            <button class="btn btn-o btn-sm" id="attExcuseCancel">Cancel</button>
-            <button class="btn btn-p btn-sm" id="attExcuseSubmit">Submit</button>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /ptAttendance -->
-
-  </div><!-- /container -->
+  </div>
 </section>
 
 
@@ -900,7 +558,7 @@
           <a href="https://www.tiktok.com/@soh.noted.ensembl?_r=1&_t=ZS-9BhYXX30Jh2" class="soc" aria-label="TikTok" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.26 8.26 0 0 0 4.83 1.55V6.79a4.85 4.85 0 0 1-1.06-.1z"/></svg></a>
         </div>
       </div>
-      <div class="fc"><h4>Navigate</h4><ul><li><a href="#home">Home</a></li><li><a href="#about">About Us</a></li><li><a href="#concerts">Concerts</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#members">Member Portal</a></li><li><a href="attendance.html">Attendance Tracker</a></li><li><a href="#contact">Contact</a></li></ul></div>
+      <div class="fc"><h4>Navigate</h4><ul><li><a href="#home">Home</a></li><li><a href="#about">About Us</a></li><li><a href="#concerts">Concerts</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#members">Portals</a></li><li><a href="#contact">Contact</a></li></ul></div>
       <div class="fc"><h4>Concerts</h4><ul><li><a href="#concerts">Christmas Concert 2026</a></li><li><a href="#concerts">Easter Cantata 2027</a></li><li><a href="#concerts">Founders' Night Gala 2027</a></li></ul></div>
       <div class="fc"><h4>Contact</h4><ul><li><a href="tel:+233548580708">0548 580 708</a></li><li><a href="tel:+233556617242">0556 617 242</a></li><li><a href="mailto:sohnoted@gmail.com">sohnoted@gmail.com</a></li><li><a href="#contact">Kumasi, Ghana</a></li><li><a href="https://docs.google.com/forms/d/e/1FAIpQLSeWEZOXcA9NEIgnMS2ec6DwpXZkyYoGMqbZkZDrOVWDidQ36A/viewform?usp=publish-editor" target="_blank" rel="noopener">Audition / Join</a></li><li><a href="admin.html" style="color:rgba(255,255,255,.3);font-size:.74rem">Admin Portal</a></li></ul></div>
     </div>
