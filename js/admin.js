@@ -647,9 +647,9 @@ function renderLive(){
       <td><span class="adm-pill ${cls}">${cap(st)}</span></td>
       <td>${tm}</td>
       <td style="display:flex;gap:5px;flex-wrap:wrap">
-        ${st==='pending'?`<button class="adm-btn adm-btn-green adm-btn-sm" onclick="liveApprove('${sId}','${m.id}')">Approve</button><button class="adm-btn adm-btn-danger adm-btn-sm" onclick="liveReject('${sId}','${m.id}')">Reject</button>`:'}
-        ${st==='absent'?`<button class="adm-btn adm-btn-green adm-btn-sm" onclick="liveMarkPresent('${sId}','${m.id}')">Mark Present</button>`:'}
-        ${st==='present'?`<button class="adm-btn adm-btn-sm adm-btn-o" onclick="liveRemove('${sId}','${m.id}')">Remove</button>`:'}
+        ${st==='pending'?`<button class="adm-btn adm-btn-green adm-btn-sm" onclick="liveApprove('${sId}','${m.id}')">Approve</button><button class="adm-btn adm-btn-danger adm-btn-sm" onclick="liveReject('${sId}','${m.id}')">Reject</button>`:''}
+        ${st==='absent'?`<button class="adm-btn adm-btn-green adm-btn-sm" onclick="liveMarkPresent('${sId}','${m.id}')">Mark Present</button>`:''}
+        ${st==='present'?`<button class="adm-btn adm-btn-sm adm-btn-o" onclick="liveRemove('${sId}','${m.id}')">Remove</button>`:''}
       </td>
     </tr>`;
   }).join('')||'<tr><td colspan="6" class="adm-empty">No members match filter.</td></tr>';
