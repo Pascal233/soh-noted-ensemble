@@ -97,11 +97,20 @@
           <p class="pl-dash-name" id="plDashName">—</p>
           <p class="pl-dash-meta" id="plDashMeta">—</p>
         </div>
+
+        <!-- Announcements from ED -->
+        <div id="plAnnBox" style="display:none;margin-bottom:16px">
+          <p style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1d4ed8;margin-bottom:8px">Announcements</p>
+          <div id="plAnnList"></div>
+        </div>
+
         <div class="pl-stats">
           <div class="pl-stat"><span class="pl-stat-n" id="plPct">—</span><span class="pl-stat-l">Attendance</span></div>
           <div class="pl-stat"><span class="pl-stat-n" id="plP" style="color:#166534">0</span><span class="pl-stat-l">Present</span></div>
           <div class="pl-stat"><span class="pl-stat-n" id="plA" style="color:#be123c">0</span><span class="pl-stat-l">Absent</span></div>
         </div>
+
+        <!-- Today's session -->
         <div id="plNoSes" class="pl-session-box" style="text-align:center;color:#94a3b8">
           <p style="font-weight:600;color:#475569;margin-bottom:4px">No session today</p>
           <p style="font-size:.8rem">Check back on your next rehearsal day.</p>
@@ -112,9 +121,11 @@
           <p class="pl-session-meta" id="plSesMeta">—</p>
           <div id="plSPresent" class="pl-status-present" style="display:none">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            Verified Present
+            Verified Present — Director has approved your check-in
           </div>
-          <div id="plSPending" class="pl-status-pending" style="display:none">Check-in submitted — awaiting director approval</div>
+          <div id="plSPending" class="pl-status-pending" style="display:none">
+            Check-in submitted — awaiting director approval
+          </div>
           <div id="plSClosed"  class="pl-status-closed"  style="display:none">Check-in window has closed for this session.</div>
           <div id="plSSoon"    class="pl-status-soon"    style="display:none">Check-in opens <strong id="plOpensIn">—</strong> before start.</div>
           <div id="plSCode" style="display:none">
@@ -131,6 +142,15 @@
             <button class="pl-code-submit" id="plCodeSubmit">Mark Me Present</button>
           </div>
         </div>
+
+        <!-- My Payments -->
+        <div class="pl-session-box" style="margin-top:4px">
+          <p class="pl-session-type" style="margin-bottom:10px">My Payments</p>
+          <div id="plPayments" style="display:flex;flex-direction:column;gap:8px">
+            <!-- filled by JS -->
+          </div>
+        </div>
+
         <button class="pl-sign-out" onclick="plLogout()">Sign Out</button>
       </div>
 
@@ -156,7 +176,14 @@ function sesTiming(s){const now=new Date();const start=new Date(s.date+'T'+s.sta
 function memberStats(mId){const ss=G(KS),rs=G(KR);let p=0,a=0;ss.forEach(s=>{const r=rs.find(r=>r.sId===s.id&&r.mId===mId);if(r&&r.status==='present')p++;else a++;});const tot=ss.length;const pct=tot>0?Math.round(p/tot*100):0;return{p,a,tot,pct};}
 
 let CU=null;
-function plLogout(){sessionStorage.removeItem('pl_user');CU=null;document.querySelectorAll('.pl-panel').forEach(p=>p.classList.remove('active'));document.getElementById('plSignIn').classList.add('active');document.querySelectorAll('.pl-tab').forEach((t,i)=>t.classList.toggle('active',i===0));}
+function plLogout(){
+  if(window._plRefresh) clearInterval(window._plRefresh);
+  sessionStorage.removeItem('pl_user');
+  CU=null;
+  document.querySelectorAll('.pl-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('plSignIn').classList.add('active');
+  document.querySelectorAll('.pl-tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+}
 
 function showDash(){
   document.querySelectorAll('.pl-panel').forEach(p=>p.classList.remove('active'));
@@ -168,7 +195,52 @@ function showDash(){
   document.getElementById('plPct').textContent=st.pct+'%';
   document.getElementById('plP').textContent=st.p;
   document.getElementById('plA').textContent=st.a;
+  loadAnnouncements();
+  loadPayments();
   loadToday();
+  // Auto-refresh every 30s to pick up admin approvals
+  if(window._plRefresh) clearInterval(window._plRefresh);
+  window._plRefresh = setInterval(()=>{ loadToday(); loadPayments(); }, 30000);
+}
+
+function loadAnnouncements(){
+  const anns = JSON.parse(localStorage.getItem('sne_announcements')||'[]');
+  const box  = document.getElementById('plAnnBox');
+  const list = document.getElementById('plAnnList');
+  if(!anns.length){ box.style.display='none'; return; }
+  box.style.display='block';
+  list.innerHTML = anns.slice(0,3).map(a=>`
+    <div style="background:${a.pinned?'#f0f4ff':'#f8fafc'};border:1px solid ${a.pinned?'#c7d2fe':'#e2e8f0'};border-radius:10px;padding:12px 14px;margin-bottom:8px">
+      ${a.pinned?'<span style="font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#1d4ed8;display:block;margin-bottom:4px">Pinned</span>':''}
+      <p style="font-size:.88rem;font-weight:700;color:#0f172a;margin-bottom:4px">${a.title}</p>
+      <p style="font-size:.8rem;color:#475569;line-height:1.6">${a.body}</p>
+      <p style="font-size:.72rem;color:#94a3b8;margin-top:6px">${new Date(a.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</p>
+    </div>`).join('');
+}
+
+function loadPayments(){
+  const month = (new Date().getMonth()+1).toString().padStart(2,'0');
+  const year  = new Date().getFullYear().toString();
+  const cats  = [
+    {key:'sne_pay_dues',    label:'Monthly Dues',       amount:20,  color:'#1e3a8a'},
+    {key:'sne_pay_welfare', label:'Welfare',            amount:10,  color:'#15803d'},
+    {key:'sne_pay_costume', label:'Costume',            amount:50,  color:'#7c3aed'},
+    {key:'sne_pay_trip',    label:'Trip/Transportation', amount:30, color:'#b45309'}
+  ];
+  const container = document.getElementById('plPayments');
+  if(!container) return;
+  container.innerHTML = cats.map(c=>{
+    const rs  = JSON.parse(localStorage.getItem(c.key)||'[]');
+    const rec = rs.find(r=>r.memberId===CU.id&&r.month===month&&r.year===year);
+    const paid = rec&&rec.paid;
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#fff;border:1px solid #e2e8f0;border-left:3px solid ${c.color};border-radius:8px">
+      <div>
+        <p style="font-size:.86rem;font-weight:700;color:#0f172a">${c.label}</p>
+        <p style="font-size:.74rem;color:#94a3b8">GHS ${rec?rec.amount:c.amount} &nbsp;·&nbsp; ${new Date().toLocaleString('default',{month:'long'})} ${year}</p>
+      </div>
+      <span style="font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:50px;background:${paid?'#dcfce7':'#ffe4e6'};color:${paid?'#166534':'#9f1239'}">${paid?'Paid':'Unpaid'}</span>
+    </div>`;
+  }).join('');
 }
 
 function loadToday(){

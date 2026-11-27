@@ -904,86 +904,145 @@ window.deleteAnn=function(id){
 // ═══════════════════════════════════════════
 // DUES TRACKER
 // ═══════════════════════════════════════════
-// Key: sne_dues — array of {memberId, month, year, amount, paid, paidDate, method, notes}
+// PAYMENTS TRACKER — 4 categories
+// Keys: sne_pay_dues | sne_pay_welfare | sne_pay_costume | sne_pay_trip
+// Each record: {memberId, month, year, amount, paid, paidDate, note}
+// ═══════════════════════════════════════════
+
+const PAY_CATS = {
+  dues:    { key:'sne_pay_dues',    label:'Monthly Dues',       amount:20,  bodyId:'duesBody',    color:'#1e3a8a' },
+  welfare: { key:'sne_pay_welfare', label:'Welfare',            amount:10,  bodyId:'welfareBody', color:'#15803d' },
+  costume: { key:'sne_pay_costume', label:'Costume',            amount:50,  bodyId:'costumeBody', color:'#7c3aed' },
+  trip:    { key:'sne_pay_trip',    label:'Trip/Transportation', amount:30,  bodyId:'tripBody',    color:'#b45309' }
+};
 
 function loadDues(){
-  renderDuesTable();
-  document.getElementById('duesMonthSel')?.addEventListener('change',renderDuesTable);
-  document.getElementById('duesYearSel')?.addEventListener('change',renderDuesTable);
-  document.getElementById('duesSrch')?.addEventListener('input',renderDuesTable);
-  document.getElementById('exportDuesBtn')?.addEventListener('click',exportDues);
-  document.getElementById('genDuesBtn')?.addEventListener('click',generateMonthlyDues);
+  // Payment category tab switching
+  document.querySelectorAll('[data-ptab]').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      document.querySelectorAll('[data-ptab]').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.adm-att-panel[id^="pt"]').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.ptab)?.classList.add('active');
+      renderAllPayTables();
+    });
+  });
+
+  document.getElementById('duesMonthSel')?.addEventListener('change', renderAllPayTables);
+  document.getElementById('duesYearSel')?.addEventListener('change',  renderAllPayTables);
+  document.getElementById('duesSrch')?.addEventListener('input',       renderAllPayTables);
+  document.getElementById('exportDuesBtn')?.addEventListener('click',  exportAllPay);
+  document.getElementById('genDuesBtn')?.addEventListener('click',     generateAllPayRecords);
+
+  renderAllPayTables();
 }
 
-function renderDuesTable(){
-  const month=document.getElementById('duesMonthSel')?.value||'';
-  const year=document.getElementById('duesYearSel')?.value||new Date().getFullYear().toString();
-  const srch=(document.getElementById('duesSrch')?.value||'').toLowerCase();
-  const dues=JSON.parse(localStorage.getItem('sne_dues')||'[]');
-  let ms=G(KM).filter(m=>!m.isAdmin);
-  if(srch) ms=ms.filter(m=>m.name.toLowerCase().includes(srch)||m.id.toLowerCase().includes(srch));
-  const tbody=document.getElementById('duesBody');
+function getPayFilter(){
+  const month = document.getElementById('duesMonthSel')?.value || (new Date().getMonth()+1).toString().padStart(2,'0');
+  const year  = document.getElementById('duesYearSel')?.value  || new Date().getFullYear().toString();
+  const srch  = (document.getElementById('duesSrch')?.value||'').toLowerCase();
+  return {month, year, srch};
+}
+
+function renderPayTable(catKey){
+  const cat = PAY_CATS[catKey];
+  if(!cat) return;
+  const {month, year, srch} = getPayFilter();
+  const records = JSON.parse(localStorage.getItem(cat.key)||'[]');
+  let ms = G(KM).filter(m=>!m.isAdmin);
+  if(srch) ms = ms.filter(m=>m.name.toLowerCase().includes(srch)||m.id.toLowerCase().includes(srch));
+  const tbody = document.getElementById(cat.bodyId);
   if(!tbody) return;
-  if(!ms.length){tbody.innerHTML='<tr><td colspan="7" class="adm-empty">No members yet.</td></tr>';return;}
-  tbody.innerHTML=ms.map(m=>{
-    const key=`${m.id}-${month||'01'}-${year}`;
-    const due=dues.find(d=>d.memberId===m.id&&d.month===(month||'01')&&d.year===year);
-    const paid=due&&due.paid;
+  if(!ms.length){ tbody.innerHTML=`<tr><td colspan="7" class="adm-empty">No members yet.</td></tr>`; return; }
+  tbody.innerHTML = ms.map(m=>{
+    const rec  = records.find(r=>r.memberId===m.id&&r.month===month&&r.year===year);
+    const paid = rec&&rec.paid;
     return `<tr>
       <td style="font-family:monospace;font-size:.74rem">${m.id}</td>
       <td><strong>${m.name}</strong></td>
       <td>${m.voice}</td>
-      <td>GHS ${due?due.amount:'20'}</td>
+      <td>GHS ${rec?rec.amount:cat.amount}</td>
       <td><span class="adm-pill ${paid?'adm-pill-green':'adm-pill-red'}">${paid?'Paid':'Unpaid'}</span></td>
-      <td>${due&&due.paidDate?new Date(due.paidDate).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'—'}</td>
-      <td>
-        ${!paid?`<button class="adm-btn adm-btn-green adm-btn-sm" onclick="markDuesPaid('${m.id}','${month||'01'}','${year}')">Mark Paid</button>`:''}
-        ${paid?`<button class="adm-btn adm-btn-sm adm-btn-o" onclick="markDuesUnpaid('${m.id}','${month||'01'}','${year}')">Undo</button>`:''}
+      <td>${rec&&rec.paidDate?new Date(rec.paidDate).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'—'}</td>
+      <td style="display:flex;gap:5px">
+        ${!paid?`<button class="adm-btn adm-btn-green adm-btn-sm" onclick="markPayPaid('${catKey}','${m.id}','${month}','${year}')">Mark Paid</button>`:''}
+        ${paid?`<button class="adm-btn adm-btn-sm adm-btn-o" onclick="markPayUnpaid('${catKey}','${m.id}','${month}','${year}')">Undo</button>`:''}
       </td>
     </tr>`;
   }).join('');
 }
 
-window.markDuesPaid=function(mId,month,year){
-  let dues=JSON.parse(localStorage.getItem('sne_dues')||'[]');
-  const i=dues.findIndex(d=>d.memberId===mId&&d.month===month&&d.year===year);
-  const rec={memberId:mId,month,year,amount:20,paid:true,paidDate:new Date().toISOString(),method:'cash'};
-  if(i>=0) dues[i]=rec; else dues.push(rec);
-  localStorage.setItem('sne_dues',JSON.stringify(dues));
-  renderDuesTable();
-  toast('Dues marked as paid.','success');
-};
-window.markDuesUnpaid=function(mId,month,year){
-  let dues=JSON.parse(localStorage.getItem('sne_dues')||'[]');
-  const i=dues.findIndex(d=>d.memberId===mId&&d.month===month&&d.year===year);
-  if(i>=0){dues[i].paid=false;dues[i].paidDate=null;}
-  localStorage.setItem('sne_dues',JSON.stringify(dues));
-  renderDuesTable();
-  toast('Dues marked as unpaid.','');
-};
-function generateMonthlyDues(){
-  const month=document.getElementById('duesMonthSel')?.value||new Date().getMonth().toString().padStart(2,'0');
-  const year=document.getElementById('duesYearSel')?.value||new Date().getFullYear().toString();
-  const ms=G(KM).filter(m=>!m.isAdmin);
-  let dues=JSON.parse(localStorage.getItem('sne_dues')||'[]');
-  let added=0;
-  ms.forEach(m=>{
-    const exists=dues.find(d=>d.memberId===m.id&&d.month===month&&d.year===year);
-    if(!exists){dues.push({memberId:m.id,month,year,amount:20,paid:false,paidDate:null});added++;}
-  });
-  localStorage.setItem('sne_dues',JSON.stringify(dues));
-  renderDuesTable();
-  toast(added+' dues records generated!','success');
+function renderAllPayTables(){
+  Object.keys(PAY_CATS).forEach(k => renderPayTable(k));
 }
-function exportDues(){
-  const dues=JSON.parse(localStorage.getItem('sne_dues')||'[]');
-  const ms=G(KM).filter(m=>!m.isAdmin);
-  let csv='ID,Name,Voice,Month,Year,Amount,Status,Date Paid\n';
-  ms.forEach(m=>{
-    dues.filter(d=>d.memberId===m.id).forEach(d=>{
-      csv+=`"${m.id}","${m.name}","${m.voice}","${d.month}","${d.year}",${d.amount},"${d.paid?'Paid':'Unpaid'}","${d.paidDate?new Date(d.paidDate).toLocaleDateString('en-GB'):'-'}"\n`;
+
+window.markPayPaid=function(catKey,mId,month,year){
+  const cat = PAY_CATS[catKey];
+  let rs = JSON.parse(localStorage.getItem(cat.key)||'[]');
+  const i = rs.findIndex(r=>r.memberId===mId&&r.month===month&&r.year===year);
+  const rec = {memberId:mId, month, year, amount:cat.amount, paid:true, paidDate:new Date().toISOString(), category:catKey};
+  if(i>=0) rs[i]=rec; else rs.push(rec);
+  localStorage.setItem(cat.key, JSON.stringify(rs));
+  renderPayTable(catKey);
+  toast(cat.label+' marked as Paid.','success');
+};
+
+window.markPayUnpaid=function(catKey,mId,month,year){
+  const cat = PAY_CATS[catKey];
+  let rs = JSON.parse(localStorage.getItem(cat.key)||'[]');
+  const i = rs.findIndex(r=>r.memberId===mId&&r.month===month&&r.year===year);
+  if(i>=0){rs[i].paid=false; rs[i].paidDate=null;}
+  localStorage.setItem(cat.key, JSON.stringify(rs));
+  renderPayTable(catKey);
+  toast('Payment status updated.','');
+};
+
+// Keep old aliases for backward compatibility
+window.markDuesPaid   = (mId,month,year) => window.markPayPaid('dues',mId,month,year);
+window.markDuesUnpaid = (mId,month,year) => window.markPayUnpaid('dues',mId,month,year);
+
+function generateAllPayRecords(){
+  const month = document.getElementById('duesMonthSel')?.value || (new Date().getMonth()+1).toString().padStart(2,'0');
+  const year  = document.getElementById('duesYearSel')?.value  || new Date().getFullYear().toString();
+  const ms    = G(KM).filter(m=>!m.isAdmin);
+  let total   = 0;
+  Object.entries(PAY_CATS).forEach(([catKey,cat])=>{
+    let rs = JSON.parse(localStorage.getItem(cat.key)||'[]');
+    ms.forEach(m=>{
+      if(!rs.find(r=>r.memberId===m.id&&r.month===month&&r.year===year)){
+        rs.push({memberId:m.id, month, year, amount:cat.amount, paid:false, paidDate:null, category:catKey});
+        total++;
+      }
+    });
+    localStorage.setItem(cat.key, JSON.stringify(rs));
+  });
+  renderAllPayTables();
+  toast(total+' payment records generated for all categories!','success');
+}
+
+// Keep old alias
+function generateMonthlyDues(){ generateAllPayRecords(); }
+
+function exportAllPay(){
+  const ms   = G(KM).filter(m=>!m.isAdmin);
+  const month= document.getElementById('duesMonthSel')?.value||'01';
+  const year = document.getElementById('duesYearSel')?.value||'2026';
+  let csv    = 'ID,Name,Voice,Category,Month,Year,Amount,Status,Date Paid\n';
+  Object.entries(PAY_CATS).forEach(([catKey,cat])=>{
+    const rs = JSON.parse(localStorage.getItem(cat.key)||'[]');
+    ms.forEach(m=>{
+      const r = rs.find(r=>r.memberId===m.id&&r.month===month&&r.year===year);
+      csv += `"${m.id}","${m.name}","${m.voice}","${cat.label}","${month}","${year}",${r?r.amount:cat.amount},"${r&&r.paid?'Paid':'Unpaid'}","${r&&r.paidDate?new Date(r.paidDate).toLocaleDateString('en-GB'):'-'}"\n`;
     });
   });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = 'SNE_Payments_'+month+'_'+year+'.csv';
+  a.click();
+  toast('Payments exported!','success');
+}
+
+function exportDues(){ exportAllPay(); }
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   a.download='SNE_Dues_'+new Date().toISOString().split('T')[0]+'.csv';

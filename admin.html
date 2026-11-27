@@ -115,7 +115,7 @@
       </button>
       <button class="adm-nav-item" data-page="pageDues">
         <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="1" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        Dues Tracker
+        Payments
       </button>
     </nav>
 
@@ -544,15 +544,25 @@
       <div id="annList"><p class="adm-empty" style="padding:40px;text-align:center">No announcements yet.</p></div>
     </div>
 
-    <!-- DUES PAGE -->
+    <!-- PAYMENTS PAGE -->
     <div class="adm-page" id="pageDues">
       <div class="adm-page-header">
-        <div><h2>Dues Tracker</h2><p>Track monthly dues payments for all choir members.</p></div>
+        <div><h2>Payments Tracker</h2><p>Track all member payments — Dues, Welfare, Costume and Trip/Transportation.</p></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="adm-btn adm-btn-o adm-btn-sm" id="genDuesBtn">Generate Month</button>
+          <button class="adm-btn adm-btn-o adm-btn-sm" id="genDuesBtn">Generate Records</button>
           <button class="adm-btn adm-btn-o adm-btn-sm" id="exportDuesBtn">Export CSV</button>
         </div>
       </div>
+
+      <!-- Payment category tabs -->
+      <div class="adm-att-tabs" style="margin-bottom:20px">
+        <button class="adm-att-tab active" data-ptab="ptDues">Monthly Dues</button>
+        <button class="adm-att-tab" data-ptab="ptWelfare">Welfare</button>
+        <button class="adm-att-tab" data-ptab="ptCostume">Costume</button>
+        <button class="adm-att-tab" data-ptab="ptTrip">Trip / Transport</button>
+      </div>
+
+      <!-- Shared filters -->
       <div class="adm-toolbar">
         <input class="adm-search" type="text" id="duesSrch" placeholder="Search member..."/>
         <select class="adm-select" id="duesMonthSel">
@@ -567,10 +577,39 @@
           <option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option>
         </select>
       </div>
-      <div class="adm-card"><div class="adm-table-wrap">
-        <table class="adm-table"><thead><tr><th>ID</th><th>Name</th><th>Voice</th><th>Amount</th><th>Status</th><th>Date Paid</th><th>Action</th></tr></thead>
-        <tbody id="duesBody"><tr><td colspan="7" class="adm-empty">Select month and year then click Generate Month.</td></tr></tbody></table>
-      </div></div>
+
+      <!-- Monthly Dues -->
+      <div class="adm-att-panel active" id="ptDues">
+        <div class="adm-card"><div class="adm-table-wrap">
+          <table class="adm-table"><thead><tr><th>ID</th><th>Name</th><th>Voice</th><th>Amount</th><th>Status</th><th>Date Paid</th><th>Action</th></tr></thead>
+          <tbody id="duesBody"><tr><td colspan="7" class="adm-empty">Click "Generate Records" to create entries for all members.</td></tr></tbody></table>
+        </div></div>
+      </div>
+
+      <!-- Welfare -->
+      <div class="adm-att-panel" id="ptWelfare">
+        <div class="adm-card"><div class="adm-table-wrap">
+          <table class="adm-table"><thead><tr><th>ID</th><th>Name</th><th>Voice</th><th>Amount</th><th>Status</th><th>Date Paid</th><th>Action</th></tr></thead>
+          <tbody id="welfareBody"><tr><td colspan="7" class="adm-empty">Click "Generate Records" to create entries.</td></tr></tbody></table>
+        </div></div>
+      </div>
+
+      <!-- Costume -->
+      <div class="adm-att-panel" id="ptCostume">
+        <div class="adm-card"><div class="adm-table-wrap">
+          <table class="adm-table"><thead><tr><th>ID</th><th>Name</th><th>Voice</th><th>Amount</th><th>Status</th><th>Date Paid</th><th>Action</th></tr></thead>
+          <tbody id="costumeBody"><tr><td colspan="7" class="adm-empty">Click "Generate Records" to create entries.</td></tr></tbody></table>
+        </div></div>
+      </div>
+
+      <!-- Trip -->
+      <div class="adm-att-panel" id="ptTrip">
+        <div class="adm-card"><div class="adm-table-wrap">
+          <table class="adm-table"><thead><tr><th>ID</th><th>Name</th><th>Voice</th><th>Amount</th><th>Status</th><th>Date Paid</th><th>Action</th></tr></thead>
+          <tbody id="tripBody"><tr><td colspan="7" class="adm-empty">Click "Generate Records" to create entries.</td></tr></tbody></table>
+        </div></div>
+      </div>
+
     </div>
 
   </main>
